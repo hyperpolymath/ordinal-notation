@@ -1,0 +1,3 @@
+name: ordinal-notation
+include: .
+depend: standard-library

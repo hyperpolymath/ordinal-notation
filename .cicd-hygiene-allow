@@ -10,3 +10,10 @@
 # these paths, resolve or issue-link it there — do not widen this list.
 build/container/entrypoint.sh
 tests/e2e.sh
+#
+# Proof code. The one sanctioned postulate-bearing module: the two OPEN
+# order-type fidelity axioms (`denotation`, `ordinal-upper-bound`; see
+# verification/proofs/agda/Fidelity-OPEN-postulates.adoc). It is quarantined
+# in verification/proofs/agda/MANIFEST (must keep failing --safe) and the exact
+# count is enforced by scripts/check-agda-trusted-base.sh in the proven suite.
+verification/proofs/agda/Ordinal/Buchholz/Fidelity.agda

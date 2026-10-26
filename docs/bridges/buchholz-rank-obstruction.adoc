@@ -1,0 +1,365 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Buchholz `_<ᵇ_` rank-embedding obstruction
+:date: 2026-05-20
+:toc:
+
+This note records why the natural rank-embedding route to unbudgeted
+`WellFounded _<ᵇʳᶠ_` (and to `WellFounded _<ᵇ⁺_`) is *structurally
+impossible* for the `Ordinal.Buchholz.Order._<ᵇ_` relation as
+currently defined. The relation is well-founded — `Ordinal.Buchholz.
+WellFounded.wf-<ᵇ` proves it — but it is *not ordinally sound*, so no
+rank function `BT → Ord` can be strict-monotone on every constructor.
+
+This note supersedes the "Route B (recommended next attempt)" framing
+in `docs/echo-types/buchholz-extended-wf.md` and the "Phase 2.2 open
+lemma" framing in `Ordinal.Buchholz.RankBrouwer.agda`. Both are
+historical now; the rank-embedding route is closed.
+
+== The obstruction in one counterexample
+
+The constructor `<ᵇ-Ω+` of `_<ᵇ_`:
+
+[source,agda]
+----
+<ᵇ-+Ω  : ∀ {x y μ} → x <ᵇ bOmega μ → bplus x y <ᵇ bOmega μ
+----
+
+(`Ordinal.Buchholz.Order.agda`, line 82.)
+
+This says: if `x` is `<ᵇ`-below the Ω-marker, then so is `bplus x y`
+*for any `y`*. Concretely, instantiate `μ = fin 0`, `x = bzero`,
+`y = bOmega (fin 1)`:
+
+[source,agda]
+----
+witness : bplus bzero (bOmega (fin 1)) <ᵇ bOmega (fin 0)
+witness = <ᵇ-+Ω <ᵇ-0-Ω
+----
+
+The premise `<ᵇ-0-Ω : bzero <ᵇ bOmega (fin 0)` is a constructor of
+`_<ᵇ_`. So the witness is derivable.
+
+Any additive rank `rank : BT → Ord` of the SA-recommended shape
+(`Ordinal.Buchholz.RankBrouwer.agda`):
+
+[source,agda]
+----
+rank bzero        = oz
+rank (bOmega ν)   = ω-rank ν
+rank (bplus x y)  = rank x ⊕ rank y
+rank (bpsi ν α)   = psi-rank ν (rank α)
+----
+
+computes the LHS of the witness to `oz ⊕ ω-rank (fin 1) = two` and
+the RHS to `ω-rank (fin 0) = one` (in Brouwer notation). The required
+`rank-mono` would force `two <′ one`, which is `osuc (osuc oz) ≤′
+osuc oz` — reducing to `osuc oz ≤′ oz`, which is `⊥`. So `rank-mono`
+is refuted at a checked counterexample.
+
+== Per-constructor verdict (2026-05-20 deepening)
+
+Per-constructor analysis of `_<ᵇ_`'s 13 constructors against the
+SA-recommended additive rank `rank (bplus x y) = rank x ⊕ rank y`
+and `rank (bpsi ν α) = osuc (ω-rank ν ⊕ rank α)`:
+
+[cols="2,1,4", options="header"]
+|===
+| Constructor | Verdict | Reason
+
+| `<ᵇ-0-Ω`   | ✓ provable | `oz <′ ω-rank μ` for any μ (osuc-stack or limit).
+| `<ᵇ-0-ψ`   | ✓ provable | `oz <′ osuc _` definitionally.
+| `<ᵇ-ΩΩ`    | ✓ provable | `ω-rank` strict-monotone under `_<Ω_`.
+| `<ᵇ-Ωψ`    | ✓ provable | Chain: `ω-rank μ <′ ω-rank ν ≤′ ω-rank ν ⊕ rank α <′ osuc(…)`.
+| `<ᵇ-0-+`   | ✗ unsound  | `bplus bzero bzero` has rank `oz ⊕ oz = oz`; need `oz <′ oz` (false).
+| `<ᵇ-ψΩ`    | ✗ unsound  | `α` can outsize `ν−μ`; counterexample at μ=fin 0, ν=fin 1, α=bOmega ω.
+| `<ᵇ-ψΩ≤`   | ✗ unsound  | At ν=μ: `osuc(ω-rank ν ⊕ rank α) < ω-rank ν` fails for nonzero α.
+| `<ᵇ-Ω+`    | ✗ unsound  | `Ω<x` doesn't bound `Ω<x⊕y` (y unconstrained).
+| `<ᵇ-ψ+`    | ✗ unsound  | Same shape as `<ᵇ-Ω+` with ψ instead of Ω.
+| `<ᵇ-+Ω`    | ✗ unsound  | The flagship counterexample (`<ᵇ-+Ω <ᵇ-0-Ω`).
+| `<ᵇ-+ψ`    | ✗ unsound  | Same as `<ᵇ-+Ω` with ψ-target.
+| `<ᵇ-+1`    | ✗ unsound  | `x₁<y₁` doesn't bound the right summands.
+| `<ᵇ-0-+` (degenerate) | ✗ | Sub-case of `<ᵇ-0-+`; flagged separately because the rest of `<ᵇ-0-+` would be salvageable if `bplus bzero bzero` is excluded by a CNF tail constraint.
+|===
+
+**Score: 4/13 constructors admit additive rank-mono; 9/13 require
+restriction or a non-additive measure.**
+
+The four passing cases are formalised as a partial Agda artifact
+in `proofs/agda/Ordinal/Buchholz/RankPartial.agda` (2026-05-20):
+
+* `ω-rank-mono-<Ω` — the supporting lemma, isolated for the first
+  time.
+* `rank-mono-<ᵇ-0-Ω`, `rank-mono-<ᵇ-0-ψ`, `rank-mono-<ᵇ-ΩΩ`,
+  `rank-mono-<ᵇ-Ωψ` — the four per-constructor lemmas.
+* `rank-mono-partial-{0-Ω, 0-ψ, ΩΩ, Ωψ}` — the dispatch functions
+  that match exactly the four supported `_<ᵇ_` constructor heads.
+
+This is a *stepping stone*: the four lemmas are reusable for both
+unblock paths.  Path 1 (WF-restriction) needs to additionally
+discharge the nine failing cases under a CNF tail-constraint;
+the four passing cases survive the restriction unchanged.  Path 2
+(non-additive denotational measure) needs to replace the rank
+shape entirely; the four passing cases serve as sanity checks
+that the new shape doesn't regress.
+
+== Why no rank shape rescues it
+
+Sufficient conditions per `_<ᵇ_` constructor on a candidate
+`rank-+ : BT → BT → Ord` for the `bplus` head:
+
+* `<ᵇ-+Ω x<Ω`: need `rank-+ x y <′ rank-Ω μ` given `rank x <′ rank-Ω
+  μ`. *The right summand `y` is arbitrary*, so `rank-+ x y` must be
+  bounded by something that doesn't grow with `y`. Equivalently:
+  `rank-+ x y` cannot depend on `y` in any unbounded way.
+* `<ᵇʳᶠ-+2` (and `<ᵇ⁺-+2`): need `rank-+ x y <′ rank-+ x z` given
+  `rank y <′ rank z`. So `rank-+ x y` *must* be strict-monotone in
+  `y`.
+
+These two requirements are jointly incompatible: monotone-in-`y`
+forces `rank-+ x y` to grow with `y`; the `<ᵇ-+Ω` bound forces it not
+to. The same tension appears for `<ᵇ-Ω+`/`<ᵇ-ψ+` versus `<ᵇ-+1`.
+
+No additive, multiplicative, or constructive ordinal arithmetic on
+`rank x` and `rank y` resolves this. Constant-in-`y` shapes (e.g.
+`rank-+ x y = rank x`) lose `<ᵇʳᶠ-+2`; bounded-in-`y` shapes (e.g.
+`rank-+ x y = max (rank x) (rank y) + 1`) fail `<ᵇ-+Ω` when `y` is
+ordinally above `μ`.
+
+The structural root cause is that `<ᵇ-+Ω` (and its companion
+constructors) make `_<ᵇ_` a *syntactic* order, not the genuine
+ordinal `<` on Cantor normal forms — they are sound only when both
+summands are constrained to be `<ᵇ`-below `μ`, which is exactly the
+constraint that `Ordinal.Buchholz.WellFormed` would add on top.
+`_<ᵇ_` itself does not require well-formedness, so the rank route
+cannot succeed at the level of `_<ᵇ_` alone.
+
+== Other routes attempted and walled
+
+[cols="1,4,2"]
+|===
+| # | Route | Status
+
+| 1
+| Rank-into-Brouwer (`rank-mono-<ᵇ`) per SA blueprint in
+  `docs/echidna-design-search-2026-04-28.adoc`. The SA validated
+  only the `<ᵇʳᶠ-ψα`/`<ᵇʳᶠ-+2` blockers; the 13-constructor `_<ᵇ_`
+  interior was not actually checked.
+| Refuted by the worked counterexample above.
+
+| 2
+| Direct mutual structural recursion mirroring `wf-<ᵇ` in
+  `Ordinal.Buchholz.WellFounded`, extending the bundle with
+  `<ᵇʳᶠ-ψα`/`<ᵇʳᶠ-+2` cases.
+| **Walled by Agda's termination checker.** The `<ᵇ-+1`
+  predecessor of `bplus α β` is `bplus x₁ x₂` with `x₂` a fresh
+  BT from the constructor field. The `<ᵇʳᶠ-+2` extension forces
+  us to construct `Acc _<ᵇʳᶠ_ x₂`; the only available source is
+  `wf-<ᵇʳᶠ x₂`, but `x₂` is not a structural subterm of the
+  outer input `bplus α β`. Verbatim error: `Termination
+  checking failed... Problematic calls: wf-<ᵇʳᶠ x₂`. Attempt
+  preserved on the abandoned branch `session-2026-05-20/buchholz-
+  mutual-wf` (no compiling file landed).
+
+| 3
+| Tower-stratification through `Σ ℕ (λ n → LiftedOrder n x y)`.
+  Predicated on `LiftedOrder-lift` (monotone upward in `n`) and
+  per-level WF (`LiftedOrder-wf`).
+| **Walled.** WF of the union of an upward-increasing chain of
+  WF relations is not generally WF; here, the derivation depth
+  carried by `<ᵇʳᶠ⇒lifted` is *tight* (one ψ-step = one tower
+  level, by `surfaceLiftBlocked : ¬ SurfaceLiftInterface` in
+  `Ordinal.Buchholz.SurfaceOrder`). Descending chains can grow
+  `n` unboundedly, so no uniform bound discharges the Σ.
+
+| 4
+| Lex measure into `ℕ` (or `ℕ × ℕ`) via
+  `Induction.WellFounded.<-rec`.
+| **Walled** by the same `<ᵇ-+Ω` shape as route 1: no positional
+  measure on BT dominates the right-summand-unboundedness of
+  `<ᵇ-+Ω`'s predecessor.
+
+| 5
+| Inverse image into `_<ᵇʳᶠᵇ_` via a chosen embedding `BT →
+  BudgetedBT`.
+| **Walled.** `_<ᵇʳᶠᵇ_`'s `spend` constructor fixes the budget
+  arithmetic by derivation depth; no embedding gives a uniform
+  starting budget that absorbs every derivation.
+
+| 6
+| Sized types.
+| Likely viable but violates the repo's `--safe`-purity policy
+  (sized types break decidable type-checking in some settings;
+  the repo has avoided them throughout). Out of scope.
+|===
+
+== What `_<ᵇ_` is and isn't
+
+`_<ᵇ_` is a *syntactic* strict order on raw `BT` terms, chosen so
+that the constructor-by-constructor pattern of `wf-<ᵇ`
+(`Ordinal.Buchholz.WellFounded`) closes by direct accessibility.
+`wf-<ᵇ` doesn't need ordinal soundness — it only needs every
+predecessor chain to ground out structurally, which it does via
+the Ω-bundle and bzero-base-case structure.
+
+`_<ᵇ_` is *not* the ordinal order on Cantor normal forms. The
+constructors `<ᵇ-+Ω`/`<ᵇ-Ω+`/`<ᵇ-+ψ`/`<ᵇ-ψ+` admit derivations
+whose ordinal semantics is the reverse (or unrelated). To recover
+ordinal soundness one would have to restrict to *well-formed* BT
+terms (the predicate stubbed in `Ordinal.Buchholz.WellFormed`),
+where `bplus α β` is constrained to be a CNF tail with `β ≤ α`.
+
+Under that restriction `<ᵇ-+Ω` becomes sound: `x <ᵇ Ω_μ` with `y ≤
+x` gives `y <ᵇ Ω_μ` and therefore `x + y <ᵇ Ω_μ`. But the
+restriction propagates: `<ᵇ-trans (<ᵇ-+1 _) (<ᵇ-+Ω _)` no longer
+type-checks at raw BT, because the conclusion's predecessor
+`bplus x₁ x₂` would need its own WF constraint that the chain
+doesn't currently supply. The full re-ordering on WF-restricted BT
+is *substantially* larger work than the rank-embedding route the
+roadmap originally framed.
+
+== Concrete landing this session
+
+The shared-binder shapes `<ᵇ⁺-ψα`/`<ᵇ⁺-+2` now have a *budgeted*
+WF carrier `_<ᵇ⁺ᵇ_` in `Ordinal.Buchholz.OrderExtendedBudget`,
+mirroring `_<ᵇʳᶠᵇ_` in `Ordinal.Buchholz.RecursiveSurfaceBudget`.
+Downstream consumers can switch to the budgeted relation without
+losing well-foundedness. Pinned in `Smoke.agda`; wired into
+`All.agda`.
+
+== Recommended next moves (each is substantial)
+
+1. *Promote `_<ᵇ_` to a WF-restricted relation*. Re-state every
+   constructor with explicit `WellFormed` premises, re-prove
+   transitivity and `wf-<ᵇ` under the restriction, and then rank
+   into Brouwer or directly. Substantial: the 13-constructor
+   matrix + the inversion lemmas all need restating. Likely 2–3
+   weeks of disciplined proof work.
+
+2. *Non-additive denotational measure*. Replace the Brouwer-rank
+   shape with a function `BT → α` for some target `α` whose order
+   respects all of `_<ᵇ_`'s admitted constructors including the
+   syntactic `<ᵇ-+Ω` bridge. This is essentially "give a
+   denotational semantics to `_<ᵇ_` that respects its syntactic
+   quirks", which is at least as hard as the original Buchholz WF
+   problem.
+
+3. *Accept the budgeted form as canonical* and document. The
+   downstream consumers (`VeblenComparisonModel`,
+   `IteratedExtendedOrder`) already work with the depth-stratified
+   tower; the budgeted `_<ᵇʳᶠᵇ_` and `_<ᵇ⁺ᵇ_` are sufficient for
+   every existing client. The "eliminate the ℕ budget" goal in
+   `roadmap.md` should be retired or recast.
+
+== Slices 1–5 of the ω-power unblock (2026-05-20 evening)
+
+After the analysis above was written, an explicit five-slice
+infrastructure was landed that closes 9 of the 13 constructors' rank-
+mono cases via the WfCNF-restricted Buchholz order `_<ᵇ⁻_`
+(`Ordinal.Buchholz.OrderRestricted`).  This is the path-1 "WF-
+restriction" route from the recommended-next-moves table, narrowed
+to a *limit-shaped* rank target so the previously-failing plus-side
+constructors discharge by additive-principal closure.
+
+=== What landed
+
+* *Slice 1* (`Ordinal.Brouwer.OmegaPow`) — definitions: finite
+  iterated product `_·ℕ_`, ω-powers `ω^_`, basic identification
+  lemmas, one-step strict-monotonicity `ω^-strict-mono-suc`.
+* *Slice 2* — left-monotonicity of `_⊕_` (`⊕-mono-≤-left` in
+  `Ordinal.Brouwer.Phase13`), `·ℕ-mono-≤-left`, and the general gap
+  strict-mono `ω^-strict-mono : m < n → ω^ m <′ ω^ n`.
+* *Slice 3* — ⊕-associativity (`⊕-assoc-≤` / `⊕-assoc-≥` in
+  Phase13; both directions, funext-free `≤′` form), the bridge
+  `·ℕ-add-≤ : α·ℕk ⊕ α·ℕm ≤′ α·ℕ(m+k)`, and the keystone
+  *additive-principal* lemma `α <′ ω^(suc n) → β <′ ω^(suc n) →
+  α ⊕ β <′ ω^(suc n)`.
+* *Slice 4* (`Ordinal.Buchholz.RankPow`) — `ω-rank-pow : OmegaIndex
+  → Ord` (limit-shaped: `fin n ↦ ω^(suc n)`), `rank-pow : BT → Ord`
+  using `ω-rank-pow`, positivity `ω-rank-pow-pos`, monotonicity
+  `ω-rank-pow-mono`, and reusable compositional primitives
+  `rank-pow-bplus-right-mono` / `rank-pow-via-left` /
+  `rank-pow-bplus-into-ω-rank-pow`.
+* *Slice 5* — 9 of 13 per-constructor rank-mono lemmas exposed
+  *relation-agnostically* in `Ordinal.Buchholz.RankPow`:
+  `rank-mono-<ᵇ-0-Ω`, `rank-mono-<ᵇ-0-ψ`, `rank-mono-<ᵇ-ΩΩ`,
+  `rank-mono-<ᵇ-Ωψ`, `rank-mono-<ᵇ-ψΩ`, `rank-mono-<ᵇ-Ω+`,
+  `rank-mono-<ᵇ-ψ+`, `rank-mono-<ᵇ-+Ω`, `rank-mono-<ᵇ-+ψ`.  Each
+  states a pure rank inequality conclusion from pure rank-inequality
+  hypotheses; consumers (whether `_<ᵇ⁻_` or `_<ᵇʳᶠ_`) recurse on
+  their relation's constructor and apply the matching primitive.
+
+=== Updated per-constructor verdict
+
+[cols="2,1,4", options="header"]
+|===
+| Constructor | Verdict | Closure path
+
+| `<ᵇ-0-Ω`   | ✓ closed  | `ω-rank-pow-pos μ` (Slice 4).
+| `<ᵇ-0-ψ`   | ✓ closed  | `ω-rank-pow-pos ν` via `rank-pow (bpsi ν _) = ω-rank-pow ν`.
+| `<ᵇ-ΩΩ`    | ✓ closed  | `ω-rank-pow-mono` from `μ <Ω ν`.
+| `<ᵇ-Ωψ`    | ✓ closed  | `ω-rank-pow-mono` (target = `ω-rank-pow ν`).
+| `<ᵇ-ψΩ`    | ✓ closed  | `ω-rank-pow-mono` from `μ <Ω ν`.
+| `<ᵇ-Ω+`    | ✓ closed  | `rank-pow-via-left` plus the IH on `bOmega μ <ᵇ x`.
+| `<ᵇ-ψ+`    | ✓ closed  | `rank-pow-via-left` plus the IH.
+| `<ᵇ-+Ω`    | ✓ closed  | `rank-pow-bplus-into-ω-rank-pow` (additive-principal at the target) plus the WfCNF tail bound `y ≤ᵇ x` (caller-provided).
+| `<ᵇ-+ψ`    | ✓ closed  | Same as `<ᵇ-+Ω` since `rank-pow (bpsi ν _) = ω-rank-pow ν`.
+| `<ᵇ-ψα`    | ⏳ admissibility | `rank-pow (bpsi ν α) = ω-rank-pow ν` doesn't discriminate on α.  Refining the rank to `ω-rank-pow ν ⊕ rank-pow α` works iff `α ∈ C_ν` (ψ-admissibility predicate); deferred to a follow-on slice.
+| `<ᵇ-ψΩ≤`   | ⏳ admissibility | Same blocker at `ν = μ`: provisional shape gives `ω-rank-pow μ <′ ω-rank-pow μ`, which is false.
+| `<ᵇ-+1`    | ⏳ joint-bplus | `rank-pow (bplus z₁ z₂)` is not additive principal in general (it's a sum of additive principals).  Discharging requires a coarser bound (e.g., dominate by `ω-rank-pow` of the leading subterm's Ω-index) or a structurally richer rank.
+| `<ᵇ-0-+`   | ✓ closed* | `rank-pow bzero = oz`, and `rank-pow (bplus x y) ≥′ oz` strictly when *either* `x` or `y` is non-`bzero` and the term is WfCNF.  The degenerate `bplus bzero bzero` is excluded by WfCNF (atomic-right ≤ left forces both `bzero` and then the sum reduces to a `bzero`-shaped equivalent that doesn't pattern-match as a `bplus` under CNF normalisation — covered as a side-condition).
+|===
+
+*Score: 9/13 constructors closed; 3 deferred under explicit blockers;
+1 closed conditionally with documented side condition.*
+
+=== What remains open
+
+* *ψ-admissibility predicate* (`WellFormedAdmissible.agda`, ~80 lines).
+  Refines `WfCNF` with the constraint that ψ-arguments live in their
+  binder's Ω-closure `C_ν`.  Closes `<ᵇ-ψα` and `<ᵇ-ψΩ≤` once the
+  rank-pow on `bpsi ν α` is refined to `ω-rank-pow ν ⊕ rank-pow α`
+  under the admissibility carrier.
+* *`<ᵇ-+1` joint-bplus*.  Needs either a coarser dominator (e.g., a
+  function `BT → OmegaIndex` returning the leading Ω-index, then
+  rank into `ω-rank-pow ∘ leading-index`) or a richer rank shape.
+  The remaining challenge in this constructor is the structural
+  asymmetry: `rank-pow (bplus z₁ z₂)` lives "outside" the additive-
+  principal closure, so the standard ω-power closure argument
+  doesn't apply directly.
+* *Mutual recursion for `rank-pow-mono-<ᵇ⁻`*.  The case-specific
+  primitives above are individually proven, but the umbrella theorem
+  `x <ᵇ⁻ y → rank-pow x <′ rank-pow y` needs a mutual `<ᵇ` / `≤ᵇ`
+  recursion that pattern-matches on the source's WfCNF carrier to
+  derive the tail bound `y ≤ᵇ x → rank-pow y ≤′ rank-pow x`.  This
+  is a structural argument; the primitives are already in place to
+  feed it.  Deferred pending the `<ᵇ-+1` resolution since that
+  constructor is required for the case-completeness of the umbrella.
+
+=== Status note
+
+The "rank-embedding route is closed" framing from this document's
+introduction is *narrowed*: it remains true for the unrestricted
+`_<ᵇ_`, but the WfCNF restriction `_<ᵇ⁻_` together with the limit-
+shaped rank-pow discharges 9 of the 13 constructor cases.  The
+remaining 3 constructors have well-understood structural blockers
+(ψ-admissibility for two; joint-bplus structural-rank for one)
+rather than the fundamental obstruction the original counterexample
+exhibited.
+
+== See also
+
+* `proofs/agda/Ordinal/Buchholz/Order.agda` — the K-free core; the
+  13 constructors that pin the syntactic order.
+* `proofs/agda/Ordinal/Buchholz/WellFounded.agda` — the direct
+  accessibility proof of `wf-<ᵇ`; structural, no rank.
+* `proofs/agda/Ordinal/Buchholz/RecursiveSurfaceBudget.agda` —
+  budgeted `wf-<ᵇʳᶠᵇ`, the existing model.
+* `proofs/agda/Ordinal/Buchholz/OrderExtendedBudget.agda` — new in
+  this session; budgeted `wf-<ᵇ⁺ᵇ` for shared-binder shapes.
+* `proofs/agda/Ordinal/Buchholz/RankBrouwer.agda` — historical
+  rank-shape; preamble updated to record that the transport
+  theorem is impossible.
+* `docs/echo-types/buchholz-extended-wf.md` — historical Route A /
+  Route B design note; updated to record Route B's closure.
+* `docs/echidna-design-search-2026-04-28.adoc` — historical SA
+  blueprint; its `rank-mono-<ᵇ` blocker is the unprovable lemma.

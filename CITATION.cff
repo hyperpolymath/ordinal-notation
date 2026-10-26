@@ -1,17 +1,22 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-  - family-names: "{{AUTHOR_LAST}}"
-    given-names: "{{AUTHOR_FIRST}}"
-    orcid: "https://orcid.org/{{AUTHOR_ORCID}}"
-title: "{{PROJECT_NAME}}"
+  - family-names: "Jewell"
+    given-names: "Jonathan D.A."
+    orcid: "https://orcid.org/0000-0002-3078-6652"
+title: "ordinal-notation"
 version: 0.1.0
-date-released: "{{CURRENT_DATE}}"
-url: "https://{{FORGE}}/{{OWNER}}/{{REPO}}"
-repository-code: "https://{{FORGE}}/{{OWNER}}/{{REPO}}"
+date-released: "2026-10-26"
+url: "https://github.com/hyperpolymath/ordinal-notation"
+repository-code: "https://github.com/hyperpolymath/ordinal-notation"
+abstract: "Constructive Agda development of ordinal notations, extracted from echo-types: Brouwer ordinals, the Veblen hierarchy up to a defined Γ₀, and a Buchholz-style term order with machine-checked well-foundedness under --safe --without-K. Frozen hand-off record; order-type fidelity to ψ₀(Ω_ω) is open."
 license: MPL-2.0
 keywords:
-  - "rsr"
+  - "agda"
+  - "ordinal-notation"
+  - "proof-theory"
+  - "brouwer-ordinals"
+  - "veblen-function"
+  - "buchholz-psi"
+  - "well-foundedness"
   - "formal-verification"
-  - "neurosymbolic"
-  - "provenance"
