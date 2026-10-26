@@ -2,170 +2,123 @@
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 // SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath)
 = ordinal-notation
-:toc:
-:toc-placement: preamble
+:toc: macro
+:icons: font
 
-// ── Licensing ───────────────────────────────────────────────────────────────
 image:https://img.shields.io/badge/Code-MPL--2.0-blue.svg?logo=mozilla[Code licence: MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
 image:https://img.shields.io/badge/Docs-CC--BY--SA--4.0-blue.svg?logo=creativecommons[Docs licence: CC-BY-SA-4.0,link="https://creativecommons.org/licenses/by-sa/4.0/"]
-image:https://img.shields.io/badge/Provenance-Quantum--Safe-blueviolet[Quantum-Safe Provenance,link="docs/legal/EXHIBIT-B-QUANTUM-SAFE.txt"]
-
-// ── Standard & quality gates ────────────────────────────────────────────────
+image:https://img.shields.io/badge/Agda-2.6.3%2B-informational[Agda 2.6.3 or later]
+image:https://img.shields.io/badge/status-frozen-lightgrey[Status: frozen]
 image:https://img.shields.io/badge/RSR-Rhodium_Standard-9C27B0[Rhodium Standard Repository,link="https://github.com/hyperpolymath/rhodium-standard-repositories"]
-image:https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/hyperpolymath/ordinal-notation/governance-badges/badges/k9.json[K9 conformance,link="https://github.com/hyperpolymath/ordinal-notation/actions/workflows/dogfood-gate.yml"]
-image:https://api.scorecard.dev/projects/github.com/hyperpolymath/ordinal-notation/badge[OpenSSF Scorecard,link="https://scorecard.dev/viewer/?uri=github.com/hyperpolymath/ordinal-notation"]
-image:https://sonarcloud.io/api/project_badges/measure?project=hyperpolymath_ordinal-notation&metric=alert_status[SonarQube Quality Gate,link="https://sonarcloud.io/summary/new_code?id=hyperpolymath_ordinal-notation"]
-image:https://archive.softwareheritage.org/badge/origin/https://github.com/hyperpolymath/ordinal-notation/[Archived in Software Heritage,link="https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/hyperpolymath/ordinal-notation"]
 
-// ── Provenance & ecosystem ──────────────────────────────────────────────────
-image:https://img.shields.io/badge/Idris-Inside-5E5086?logo=idris&logoColor=white[Idris Inside,link="https://github.com/hyperpolymath/proven"]
-image:https://img.shields.io/badge/Zig-Zero--overhead-F7A41D?logo=zig&logoColor=black[Zig Zero-overhead FFI,link="https://github.com/hyperpolymath/typed-wasm"]
-image:https://api.thegreenwebfoundation.org/greencheckimage/github.com[Green Web,link="https://www.thegreenwebfoundation.org/green-web-check/?url=github.com"]
+[.lead]
+A constructive Agda development of ordinal notations: Brouwer ordinals, the
+Veblen functions up to a defined Γ₀, and a Buchholz-style term order with
+machine-checked well-foundedness. It was extracted from
+https://github.com/hyperpolymath/echo-types[echo-types]. Every module checked
+by the gate compiles under `--safe --without-K` with no postulates.
 
-Constructive Agda development of ordinal notations, extracted from echo-types: Brouwer ordinals, the Veblen hierarchy up to a defined Γ₀, and a Buchholz-style term order with machine-checked well-foundedness under --safe --without-K. Frozen hand-off record; order-type fidelity to ψ₀(Ω_ω) is open.
+toc::[]
 
-[IMPORTANT]
-====
-*This file is a template.* You are reading `README.adoc` from the *RSR template repo*
-(or a freshly-cloned copy of it). Run `just repo-init` to replace every `{{PLACEHOLDER}}`
-token with your project's details, then delete this admonition. Until you do, the
-`{{...}}` markers below are intentional placeholders, not content.
-====
+== Status: frozen
 
-== What this is
+This repository is the *hand-off record* of a research ladder that outgrew
+echo-types. It is not an active project. The owner decision (`D-2026-06-21`,
+recorded in `docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc`)
+is that the climb is not being continued. The artifact is valid and is kept as
+it stood. Nothing here is claimed beyond what the proofs state.
 
-A new repository scaffolded from the *Rhodium Standard Repository (RSR)* template:
-a batteries-included starting point that ships with CI/CD, machine-readable project
-metadata, an AI-agent gatekeeper protocol, a formally-typed ABI/FFI seam
-(Idris2 + Zig), container and reproducible-build scaffolding, and governance
-infrastructure — all wired and passing the RSR validators on day one.
+*Order-type fidelity is OPEN.* There is no proof that the Buchholz order on
+`WfBT` has order type ψ₀(Ω_ω). What is verified:
 
-Replace this section with a description of *your* project once initialised.
+* well-foundedness of the Buchholz orders;
+* a Veblen ladder up to a defined Γ₀, in which every level is a normal
+  function and the fixed-point engine gives the least fixed point and is
+  monotone in its function;
+* one direction of Γ₀'s fixed-point property (`Γ₀-prefixed`).
 
-== Quick start
+The reverse direction is reduced to an explicit closure obligation
+(`Γ₀-fixed-from-closure`) and is *not* proved. See
+link:Fidelity-OPEN-postulates.adoc[Fidelity-OPEN-postulates.adoc] and
+`docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc`.
 
-[source,bash]
-----
-# 1. Create a repo from this template (or clone it), then from the repo root:
-just repo-init                # interactive bootstrap: fills every {{PLACEHOLDER}}
+=== The two postulates
 
-# 2. See the available tasks:
-just                     # lists all phases (build, test, validate, audit, ...)
+`verification/proofs/agda/Ordinal/Buchholz/Fidelity.agda` declares two
+postulates, `denotation` and `ordinal-upper-bound`. It is the only file here
+that is not `--safe`. It is *left out* of `All.agda` and is recorded as
+`quarantine` in `verification/proofs/agda/MANIFEST`, so nothing verified
+depends on it.
 
-# 3. Check the repo still satisfies the RSR shape:
-just validate            # structure + metadata checks
-----
+== What is here
 
-`just repo-init` prompts for the project name, owner, author, licence contact, and the
-other values listed in `.machine_readable/ai/PLACEHOLDERS.adoc`, substitutes them
-across the tree, validates the result, and (if available) runs the `k9-svc` checks.
-
-[[ai-install]]
-== AI-Assisted Installation (Recommended)
-
-=== Just say it
-
-Say this to any AI assistant that can read a URL and run commands (or give you
-commands to paste):
-
-[source,text]
-----
-Create a new repository from https://github.com/hyperpolymath/ordinal-notation
-----
-
-The URL is the key: it leads the assistant to
-link:docs/AI_INSTALLATION_GUIDE.adoc[`docs/AI_INSTALLATION_GUIDE.adoc`], the
-complete step-by-step recipe. The assistant checks your system, installs the
-prerequisites, instantiates the template with `just repo-init`, and verifies the
-result with `just doctor`.
-
-* "Set up ordinal-notation so I can work on the template itself — https://github.com/hyperpolymath/ordinal-notation"
-* `./launcher.sh --ai-setup` (or `just ai-setup`) prints the line and the guide path.
-
-=== What you will be asked
-
-. Your operating system (Linux, macOS, or Windows via WSL2).
-. The new project's name, owner, author and licence contact (the values listed in
-  `.machine_readable/ai/PLACEHOLDERS.adoc`).
-. To confirm the privacy notice below.
-
-=== Privacy and security
-
-[IMPORTANT]
-====
-Setting up ordinal-notation clones this repository and installs its developer
-tools per-user with mise (no administrator rights, nothing sent anywhere).
-`just repo-init` rewrites files only inside the new checkout; it creates no
-remote repository and pushes nothing until you do.
-====
-
-=== Minting without a terminal
-
-Agents and CI can mint non-interactively: set `RSR_NON_INTERACTIVE=1` and pass
-the answers as environment variables named like the prompts' variables in
-`build/just/repo-init.just` (`PROJECT_NAME`, `REPO`, `OWNER`, `AUTHOR` and
-`AUTHOR_EMAIL` are required; any other answer left unset is blank or takes its
-default). Piping the answers to stdin in prompt order also works.
-
-=== Troubleshooting
-
-Run `just doctor`; each FAIL carries a code explained in
-link:docs/SETUP.adoc#troubleshooting[`docs/SETUP.adoc` §Troubleshooting], and
-`just heal` applies the automatic fixes. Prefer to do it yourself? The full
-manual route is link:docs/SETUP.adoc[`docs/SETUP.adoc`]; developers and
-maintainers can brief an AI with `just ai-warmup dev` / `just ai-warmup maintainer`.
-
-== What you get
-
-* *Machine-readable metadata* (`.machine_readable/descriptiles/`) — `STATE`, `META`,
-  `ECOSYSTEM`, `PLAYBOOK`, `AGENTIC`, `NEUROSYM`, `CLADE`, and `anchors/ANCHOR`,
-  in deed, so tools and agents can read the project's state and boundaries.
-* *AI gatekeeper protocol* — `ordinal-notation_chora.deed` (the repo deed) is the
-  universal entry point that tells an AI agent how to work in this repo before it
-  touches anything; it carries the AI allocation policy and the ply directory tree.
-* *Typed ABI/FFI seam* — `src/interface/Abi/` (Idris2 type + layout proofs) over
-  `src/interface/ffi/` (Zig implementation), with generated C headers.
-* *CI/CD* — GitHub Actions for quality, security (CodeQL, Scorecard, secret
-  scanning), multi-forge mirroring, and RSR anti-pattern enforcement.
-* *Supply-chain & reproducibility* — container layering (stapeln), Guix shells,
-  SBOM, and signing hooks.
-* *Governance* — `GOVERNANCE.adoc`, `MAINTAINERS.adoc`, `.github/` community health
-  files, and a release `AUDIT.adoc` gate.
-
-== Repository map
-
-The authoritative map is generated, so it cannot drift from the tree:
-link:docs/architecture/REPOSITORY-MAP.adoc[docs/architecture/REPOSITORY-MAP.adoc]
-(regenerate with `just repo-map`; CI fails if it is stale).
-
-The short version:
-
-[cols="1,3"]
+[cols="1,3",options="header"]
 |===
-| Path | What lives there
+| Path under `verification/proofs/agda/Ordinal/` | Content
 
-| `README.adoc`, `CLAUDE.md` | Start here - humans and AI agents respectively.
-| `src/`, `tests/`           | The code and its tests.
-| `docs/`                    | Human documentation, including the full map above.
-| `.machine_readable/`        | Manifests, contractiles and policies that tools read.
-| `build/`, `Justfile`       | Every task runs through `just`; phases live in `build/just/`.
-| `ci/`, `.github/`          | CI configuration; GitHub reads `.github/` and no other path.
+| `Brouwer/`
+| Brouwer ordinals, arithmetic, ω-powers, `ω^^`, `ε₀`, Veblen `φ₁` and the
+  binary `φ`, normality and monotonicity lemmas, `Γ₀` defined.
+
+| `Buchholz/`
+| The Buchholz term syntax `BT`, the partial order `_<ᵇ_` and its
+  well-foundedness, the sound doubled-ladder order `_<ᵇ²_` with an
+  unbudgeted `wf-<ᵇ²`, rank embeddings into Brouwer ordinals, surface,
+  extended and recursive-surface orders, and the `Fidelity` scaffold.
+
+| `CNF.agda`, `Closure.agda`, `PsiSimple.agda`, `Base.agda`, `OmegaMarkers.agda`
+| The Cantor-normal-form layer, the ℕ-staged closure, the pedagogical ψ, and
+  the Ω-marker leaf module.
 |===
 
-== Where to go next
+link:docs/EXPLAINME.adoc[docs/EXPLAINME.adoc] maps each claim to the module
+and theorem that proves it. The Veblen levels, the doubled-ladder design and
+the rejected routes are explained in `docs/bridges/buchholz-plan.adoc` and
+`docs/bridges/buchholz-rank-obstruction.adoc`.
 
-* link:docs/architecture/REPOSITORY-MAP.adoc[The repository map] — generated; what every directory is for.
-* link:docs/EXPLAINME.adoc[EXPLAINME] — the engineering deep-dive: how the pieces actually work.
-* link:docs/AFFIRMATION.adoc[AFFIRMATION] — the dated, signed honesty snapshot of the repo's true state.
-* link:docs/AUDIT.adoc[AUDIT] — the release audit gate.
-* link:docs/AI_INSTALLATION_GUIDE.adoc[AI installation guide] — for agents instantiating this template.
-* link:.machine_readable/ai/PLACEHOLDERS.adoc[PLACEHOLDERS] — the full placeholder reference.
+== Build
+
+You need Agda 2.6.3 or later and version 2.3 of the Agda standard library,
+registered under the library name `standard-library`.
+
+[source,sh]
+----
+agda verification/proofs/agda/All.agda
+----
+
+`ordinal-notation.agda-lib` sets the include path. The template proof gate
+checks every module listed in `verification/proofs/agda/MANIFEST`: 76 gated
+modules, plus `Fidelity.agda`, which must keep failing `--safe`.
+
+[source,sh]
+----
+just proof-check-agda
+----
+
+`verification/proofs/agda/Ordinal/Buchholz/Smoke.agda` pins the headline
+theorems.
+
+== Relation to echo-types
+
+echo-types keeps three small bridge modules, because its echo-to-ordinal
+bridge depends on them: `Ordinal.OmegaMarkers`, `Ordinal.Buchholz.Syntax` and
+`EchoOrdinal`. The first two also live here, so the two copies can drift.
+Treat the copies in this repository as the maintained versions of the ordinal
+side.
+
+== History and provenance
+
+This code was extracted from echo-types `main` at
+`703dd77af402e959b46f49e8ce2e084521bedbae`. Module names are unchanged. The
+Agda sources moved from echo-types' `proofs/agda/` to
+`verification/proofs/agda/` to fit this repository's layout. The documents
+under `docs/bridges/` and `docs/echo-types/` still use the old `proofs/agda/`
+paths. They are kept as they were written. The full per-file history stays in
+echo-types up to that commit.
 
 == Licence
 
-Code, configuration and scripts are link:LICENSE[Mozilla Public License 2.0]
-(`MPL-2.0`); prose documentation is `CC-BY-SA-4.0`. Both texts live in
-`LICENSES/`, and per-file `SPDX-License-Identifier` headers are authoritative.
-The GitHub-detected licence is MPL-2.0 (the root `LICENSE`). Long-term
-attribution uses Quantum-Safe Provenance — see
-link:docs/legal/EXHIBIT-B-QUANTUM-SAFE.txt[the Quantum-Safe Provenance exhibit].
+Code, configuration and scripts are licensed under the
+link:LICENSE[Mozilla Public License 2.0] (`MPL-2.0`). Prose documentation is
+licensed under `CC-BY-SA-4.0`. Both texts are in `LICENSES/`, and the
+`SPDX-License-Identifier` header in each file is authoritative.

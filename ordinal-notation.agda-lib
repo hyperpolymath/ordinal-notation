@@ -1,0 +1,3 @@
+name: ordinal-notation
+include: verification/proofs/agda
+depend: standard-library

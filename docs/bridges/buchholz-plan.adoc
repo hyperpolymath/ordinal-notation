@@ -1,0 +1,394 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Buchholz-style Collapsing Layer: Plan and First Proof
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+
+[CAUTION]
+====
+*Historical spec.*  This document is the original phased plan for the
+ordinal-notation / collapsing-function workstream as written when E1–E7
+were ahead of us.  The "PLANNED" tags below are dated; many phases have
+since landed under different module names (E1–E7 closed; the WfCNF
+restriction +  `RankPow` / `RankAdm` / `RankLex` slices replace the
+generic `Phase 2.2 rank-mono`; the WF-0/WF-1 well-foundedness is in
+`Ordinal.Buchholz.WellFounded`).  *Live per-constructor verdict*:
+`docs/echo-types/buchholz-rank-obstruction.adoc`.  *Live lane status*:
+`roadmap.adoc` § Lane 3.  *Per-session ledger*: `CLAUDE.md` § "Current
+rung state".  This file is retained for provenance and design context;
+treat its concrete "PLANNED" items as superseded.
+====
+
+[.lead]
+This document scopes the ordinal-notation / collapsing-function workstream
+(Workstream E in `roadmap.adoc`). It is a spec, not a theorem file.
+Its purpose is to pin down *what we are building*, in what order, and
+what counts as the first success before any ψ-value is even mentioned.
+
+toc::[]
+
+== Mission
+
+Formalize, in `--safe --without-K` Agda, a staged Buchholz-style
+collapsing notation system sufficient to eventually state a target
+such as `ψ₀(Ω_ω)` (Bachmann–Howard) and, beyond that, a compact
+reading of `ψ(Ω_Ω)`.
+
+Only when that syntactic engine exists do we add `EchoOrdinal.agda`
+to bridge collapsing steps with the existing echo/residue machinery.
+
+== Target selection
+
+`ψ(Ω_Ω)` is an ambiguous phrase without further qualification.
+We fix the following staged convention. Each stage is a gate: the
+next stage is not attempted until the current stage compiles and
+its headline lemma is established.
+
+[cols="1,3,3", options="header"]
+|===
+| Stage | Target language | Intended witness term
+
+| S0 | single-cardinal pedagogical ψ, ℕ-indexed closure stages | `ψ 0`, `ψ (ψ 0)`
+| S1 | finite-index Buchholz fragment ψ_n over Ω_n                  | `ψ₀(Ω₁)`
+| S2 | Buchholz ψ_ν for ν ≤ ω                                       | `ψ₀(Ω_ω)` (Bachmann–Howard)
+| S3 | extended fragment sufficient to denote the intended `ψ(Ω_Ω)` | see S3 note
+|===
+
+S3 note: "ψ(Ω_Ω)" is formalised in this repo as `ψ₀(Ω_{Ω_ω})`,
+i.e. Ω at the position of the Ω_ω marker in the Ω-scale. Other
+readings are possible (diagonalization fixpoint, Rathjen-style
+extensions); those are *not* what this plan targets.
+
+== Layering
+
+The workstream separates into three layers that must not be conflated.
+
+. Notation infrastructure: term syntax, normal forms, comparison.
+. Buchholz collapsing machinery: closure sets, ψ as least-gap.
+. Echo bridge: collapsing step read as non-injective map, echoes
+  retaining pre-collapse provenance.
+
+Echo-types’ existing identity claim (structured loss under
+non-injective computation) only plugs in at layer 3. Layers 1 and 2
+must stand as ordinary proof-theoretic development first.
+
+== Module layout (planned)
+
+----
+proofs/agda/Ordinal/Base.agda            -- toy OT syntax (S0)
+proofs/agda/Ordinal/CNF.agda             -- CNF fragment below ε₀
+proofs/agda/Ordinal/OmegaMarkers.agda    -- formal Ω_n symbols (no semantics yet)
+proofs/agda/Ordinal/Closure.agda         -- ℕ-staged closure family, headline: C-monotone
+proofs/agda/Ordinal/PsiSimple.agda       -- pedagogical ψ: least-gap shape
+proofs/agda/Ordinal/Buchholz/Syntax.agda -- Buchholz terms
+proofs/agda/Ordinal/Buchholz/Closure.agda -- C_ν(α)
+proofs/agda/Ordinal/Buchholz/Psi.agda    -- ψ_ν
+proofs/agda/Ordinal/Buchholz/Examples.agda -- first ten witness terms in order
+proofs/agda/Ordinal/Buchholz/Smoke.agda  -- pin load-bearing names
+proofs/agda/EchoOrdinal.agda             -- bridge to echo / residue layers
+----
+
+Modules are added to `All.agda` only as each stage compiles cleanly.
+
+== Milestone matrix
+
+Note: `CLAUDE.md` currently refers to CNF trichotomy as "E3" (post-merge renumbering), while this matrix keeps it as E2.
+
+[cols="1,2,4,2", options="header"]
+|===
+| ID | Layer | Goal | Headline lemma
+
+| E1 | notation | OT syntax, structural induction | —
+| E2 | notation | CNF fragment below ε₀          | `cnf-trichotomy`
+| E3 | closure  | ℕ-staged closure family         | *`C-monotone`*
+| E4 | closure  | pedagogical ψ as least gap      | `psi-notin-C`, `psi-least`
+| E5 | Buchholz | Ω_ν scale + C_ν + ψ_ν           | `Cν-monotone`, `psiν-notin-Cν`
+| E6 | Buchholz | target terms well-formed        | `BH-wf`, `psi-OmegaOmega-wf`
+| E7 | echo     | collapse as non-injective map   | `ordinal-collapse-non-injective`
+|===
+
+== WF track status (current)
+
+The order / well-foundedness track now has an explicit staged split:
+
+* WF-0 (`Ordinal.Buchholz.Order`): partial strict order with
+  irreflexivity and transitivity over the currently admitted
+  constructors.
+* WF-1 (`Ordinal.Buchholz.WellFounded`): `WellFounded _<ᵇ_` for the
+  current core, with irreflexivity recovered as a corollary
+  (`<ᵇ-irreflexive`) instead of a direct shared-binder elimination
+  proof.
+* WF-1.5 (`Ordinal.Buchholz.VeblenInterface`): measure-route interface
+  pinning constructor-by-constructor decrease obligations and explicit
+  deferred same-binder obligations (`dec-ψα`, `dec-+2`) for the Veblen
+  follow-up.
+* WF-1.6 (`Ordinal.Buchholz.VeblenIdentityModel`): first concrete
+  instantiation of the interface (identity-measure bootstrap), keeping
+  `dec-ψα` and `dec-+2` as explicit assumptions.
+* WF-1.65 (`Ordinal.Buchholz.VeblenMeasureTarget`): first concrete
+  measure target fixed as a lexicographic order on `OmegaIndex × BT`,
+  with well-foundedness reduced to `×-wellFounded <Ω-wf wf-<ᵇ`.
+* WF-1.68 (`Ordinal.Buchholz.VeblenProjectionMeasure`): projection
+  measure into that target made explicit; the two deferred
+  shared-binder obligations now land as concrete target lemmas
+  `proj-dec-+2` and `proj-dec-ψα`.
+* WF-1.69 (`Ordinal.Buchholz.VeblenComparisonTarget`,
+  `Ordinal.Buchholz.VeblenComparisonModel`): comparison-lex target on
+  `BT × Payload` with recursive `ψ`-compatibility on the first
+  coordinate and tagged payload descent on the second; now packages
+  an assumption-free interface model in which `dec-ψα`, `dec-+2`,
+  and the lifted same-index `ψ`-to-`+` comparison are all discharged
+  internally.
+* WF-1.7 (`Ordinal.Buchholz.VeblenObligations`): discharge
+  same-binder obligation shapes in projection-model form; landed lemmas:
+  `dec-+2-plus-right`, `dec-ψα-psi-arg`.
+* WF-1.8 (`Ordinal.Buchholz.ExtendedOrder`): comparison-induced
+  wrapper relation `_ <ᵇ⁺ _` on `BT`, containing the current core and
+  exposing same-binder principles as derived lemmas; transitivity and
+  well-foundedness now come from the closed comparison target rather
+  than direct constructor recursion.
+* WF-1.85 (`Ordinal.Buchholz.SurfaceOrder`): first direct inductive
+  surface `_ <ᵇˢ _` adding the two historical same-binder shapes as
+  constructors over current-core premises; embeds into `_ <ᵇ⁺ _` and
+  therefore inherits well-foundedness immediately.
+* WF-1.86 (`SurfaceLiftInterface` / recursive `_ <ᵇʳ _` skeleton in
+  `Ordinal.Buchholz.SurfaceOrder`): this candidate was tested and
+  blocked. A concrete same-left `bplus` counterexample refutes the
+  required lifted `ψ`-stability against the current wrapper, so the
+  recursive surface route is not the right intermediate theorem.
+  The direct surface bridge `_ <ᵇˢ _` remains the proved bridge
+  candidate.
+* WF-1.87 (`Ordinal.Buchholz.LiftedExtendedOrder`): the next honest
+  step is wrapper iteration rather than wrapper self-lift. A new
+  well-founded wrapper `_ <ᵇ⁺¹ _` lifts same-binder moves out of
+  `_ <ᵇ⁺ _` and proves the first nested example
+  `ψν (x + y) < ψν (x + z)` from `y <ᵇ z`.
+* WF-1.88 (`Ordinal.Buchholz.IteratedExtendedOrder`): the one-step
+  repair now scales uniformly to finite depth. `LiftedOrder n`
+  iterates the wrapper construction over `ℕ`, `LiftedOrder-lift`
+  embeds each level into the next, and `SurfaceDepth n` records exact
+  same-binder depth with an embedding into `LiftedOrder (suc n)`.
+* WF-1.89 (`Ordinal.Buchholz.RecursiveSurfaceOrder`): a direct
+  recursive finite-closure candidate `_ <ᵇʳᶠ _` is now in place.
+  Every derivation yields an exact depth witness `n` together with a
+  `SurfaceDepth n` derivation, hence embeds into
+  `LiftedOrder (suc n)` and is irreflexive.
+* WF-1.895 (`Ordinal.Buchholz.RecursiveSurfaceBudget`): the recursive
+  surface route now has an explicit well-founded budget carrier.
+  A budgeted relation on `ℕ × BT` is well-founded by first-coordinate
+  descent and still transports each step into the iterated wrapper
+  tower.
+* WF-2 (completed for mixed-head cases): bridge layer now includes
+  `bpsi ν α <ᵇ bOmega μ` (under `ν ≤Ω μ`), left-summand bridges into
+  additive terms (`<ᵇ-Ω+`, `<ᵇ-ψ+`), and additive-target bridges
+  (`<ᵇ-+Ω`, `<ᵇ-+ψ`) with inversions.
+
+Current Veblen-route status after this update:
+
+* The comparison model now discharges the lifted same-index
+  `ψ`-to-`+` comparison internally and instantiates the Veblen
+  interface without deferred assumptions.
+* `core-wf-from-comparison` now gives a concrete well-foundedness
+  route for the current constructor core.
+* This closure is deliberately scoped: it closes the route for the
+  currently admitted constructors already present in
+  `Ordinal.Buchholz.Order`.
+* `Ordinal.Buchholz.ExtendedOrder` now gives a second, larger closed
+  relation on `BT` by pulling the comparison target back along
+  `cmp-measure`; this relation includes the historical same-binder
+  principles as lemmas and is transitive / well-founded.
+* `Ordinal.Buchholz.SurfaceOrder` now gives the first direct
+  constructor-level bridge candidate: the same-binder shapes exist as
+  constructors there, but still over current-core premises, and the
+  closure argument runs by embedding into `_ <ᵇ⁺ _`.
+* The attempted recursive surface lift is now explicitly blocked by a
+  counterexample theorem in `Ordinal.Buchholz.SurfaceOrder`; the
+  proved bridge remains `_ <ᵇˢ _`.
+* `Ordinal.Buchholz.LiftedExtendedOrder` now supplies the next
+  well-founded wrapper `_ <ᵇ⁺¹ _`, showing that the surviving route is
+  iterative wrapper lifting rather than a self-stability theorem for
+  `_ <ᵇ⁺ _`.
+* `Ordinal.Buchholz.IteratedExtendedOrder` now packages that route at
+  arbitrary finite depth: the wrapper construction is iterated over
+  `ℕ`, and exact finite same-binder nesting is tracked by
+  `SurfaceDepth`.
+* `Ordinal.Buchholz.RecursiveSurfaceOrder` now turns that indexed
+  picture back into a single direct recursive candidate. The current
+  theorem is per-derivation: any proof in `_ <ᵇʳᶠ _` has some finite
+  depth and therefore lands in a suitable iterated wrapper.
+* `Ordinal.Buchholz.RecursiveSurfaceBudget` now supplies the accepted
+  recursion vehicle for the next theorem: once an explicit nat budget
+  is carried, recursive-surface descent is well-founded and still
+  lifts into the iterated wrappers.
+* It does *not* yet promote the historically blocked shared-binder
+  shapes into actual constructors of `_ <ᵇ _`; that remains the
+  missing step between the current core and the full intended
+  Buchholz order.
+* `VeblenIdentityModel` and `VeblenProjectionMeasure` remain in-tree
+  as explanatory scaffolds, not as live proof gaps.
+* `VeblenComparisonTarget` now also exposes target-side transitivity
+  lemmas (`≺P-trans`, `≺C-trans`) as preparation for any later
+  recursive/shared-binder internalization of the full order.
+* So there are two distinct follow-ups:
+** editorial cleanup: decide which older intermediate scaffolds stay
+   as explanatory stages and which can be demoted
+** mathematical completion: internalize the shared-binder cases back
+   into the real order package and then re-close inversion,
+   transitivity, and well-foundedness for that enlarged order
+
+Internalisation investigation (2026-04-24):
+
+* Adding `<ᵇ-ψα : α <ᵇ β → bpsi ν α <ᵇ bpsi ν β` and
+  `<ᵇ-+2  : y₂ <ᵇ z₂ → bplus x y₂ <ᵇ bplus x z₂` as constructors to
+  `_<ᵇ_` typechecks under `--safe --without-K` on Agda 2.8.
+* Transitivity `<ᵇ-trans` extends cleanly: every new left×right pair
+  either reduces to a strictly smaller `<ᵇ` / `<Ω` subproof, reuses a
+  head from an existing constructor, or transfers the result via the
+  existing recursive cases. No K-elimination is required for the
+  transitivity step because its inputs' shared middle term forces
+  unification against fresh implicits, not a reflexive equation.
+* `<ᵇ-irrefl` in its current direct-pattern form is blocked. Matching
+  `<ᵇ-ψα α<α : bpsi ν α <ᵇ bpsi ν α` needs the K-free unifier to
+  eliminate `ν = ν`, which it cannot. Workaround: delete the direct
+  `<ᵇ-irrefl` from `Order.agda` and rely on `<ᵇ-irreflexive` in
+  `WellFounded.agda` (derived from `wf-<ᵇ` via `wf⇒asym`). This
+  requires a working `wf-<ᵇ` for the enlarged order.
+* `wf-<ᵇ` (direct) is where the real blocker lives. The `<ᵇ-+2`
+  constructor makes `Acc _<ᵇ_ (bplus α β)` depend on Acc on the
+  right summand β, so the helper must take two Accs and descend
+  lex-wise. Agda 2.8's Foetus-style termination checker does not
+  recognise lex-Acc descent when the second Acc is obtained by
+  calling a passed-in `WellFounded _<ᵇ_` witness — even when the
+  witness enters via an anonymous-module parameter. Attempted
+  variants (standalone `<ᵇ-acc-bplus-lex` parameterised by wfB;
+  module-local `BplusLex`; inline lambda-matched `acc`) all produce
+  the same `[TerminationIssue]` diagnosis.
+* A full mechanisation therefore needs one of the heavier
+  architectural moves: (a) decouple `VeblenComparisonTarget`'s
+  `×-wellFounded'` from `wf-<ᵇ` (bootstrap the lex-WF on a
+  core-restricted `<ᵇ`), or (b) rebuild `wf-<ᵇ` over a BT-structural
+  measure known to be WF independently of `_<ᵇ_` (e.g. explicit
+  ordinal rank), or (c) enable `--sized-types` within this submodule
+  — verify compatibility with `--safe` first — and prove WF by
+  co-inductive size descent on the two-Acc helper. None of these
+  belong in a single incremental step.
+* Current landing (2026-04-24): revert the constructor additions;
+  keep the same-binder shapes in `<ᵇ⁺` (`ExtendedOrder`) and `<ᵇˢ`
+  (`SurfaceOrder`) as before. The blocker is documented here rather
+  than rediscovered.
+
+Option B programme (rank-based direct WF, 2026-04-24 onwards).
+After analysing the three unblock routes, Option B (build an
+independently well-founded rank target + transport WF via
+`Subrelation` + `InverseImage`) was chosen as the long-term path.
+It retires ~12 wrapper / surface / iterated-order modules that
+exist only to compensate for the missing direct internalisation.
+The work is layered into phases:
+
+* Phase 1.1 (DONE 2026-04-24, `proofs/agda/Ordinal/Brouwer.agda`):
+  Brouwer-style ordinal notation `data Ord = oz | osuc | olim`
+  with `_≤_`, `_<_ = osuc α ≤ β`, transitivity, and
+  `wf-< : WellFounded _<_` proved directly by structural induction
+  on `Ord`. This module is `_<ᵇ_`-independent and establishes the
+  rank target. Pinned in `Smoke.agda`.
+* Phase 1.2 (DONE 2026-04-24, `proofs/agda/Ordinal/Brouwer/Arithmetic.agda`):
+  ordinal arithmetic *definitions*. Lands `_⊕_` (left-recursive
+  naive sum; not Hessenberg — right-monotonicity is enough for our
+  rank needs), `nat-to-ord`, `ω-rank : OmegaIndex → Ord`, and
+  `psi-rank : OmegaIndex → Ord → Ord = osuc (ω-rank ν ⊕ α)`. All
+  non-trivial monotonicity proofs are deferred to Phase 1.3 —
+  probing Phase 1.2 surfaced a design question about `_≤_`'s
+  axiomatisation (data-constructors vs recursive definition) that
+  Phase 1.3 will resolve when it attempts `osuc-mono-≤` and
+  `⊕-mono-≤-right`.
+* Phase 1.3 (PLANNED): monotonicity lemmas for each operation in
+  Phase 1.2. Needed for propagating `<ᵇ`-descent into `<Ord`-descent.
+  Likely includes a small `Ordinal.Brouwer` refactor: the current
+  `data _≤_` with `≤-refl` / `≤-suc` / `≤-lim` constructors makes
+  `osuc-mono-≤ : x ≤ y → osuc x ≤ osuc y` non-trivial in the
+  `≤-lim` case (the premise `x ≤ f n` does not lift to
+  `osuc x ≤ f n`). Candidate fixes: add a `≤-lim-below` constructor
+  for `(∀ n → f n ≤ β) → olim f ≤ β`, or switch `_≤_` to a
+  recursive definition where `osuc-mono-≤` is the identity.
+* Phase 2.1 (PLANNED): `rank : BT → Ord` interpretation.
+* Phase 2.2 (PLANNED): `rank-mono : _<ᵇ_ ⇒ (_<_ on rank)`
+  constructor-by-constructor.
+* Phase 3 (PLANNED): add `<ᵇ-ψα` + `<ᵇ-+2` to `_<ᵇ_`, extend
+  `rank-mono` with the two new cases, replace `wf-<ᵇ` in
+  `WellFounded.agda` with `Subrelation.wellFounded rank-mono
+  (InverseImage.wellFounded rank wf-<)`. At that point `<ᵇ-irrefl`
+  becomes a corollary of `wf⇒asym wf-<ᵇ`.
+* Phase 4 (PLANNED): retire the wrapper / surface / iterated-order
+  modules that become redundant.
+
+Risk-gated bridge currently admitted:
+
+* The original top-marker bridges remain as named specialised lemmas
+  (`<ᵇ-+ω`, `<ᵇ-+ψω`) over the now-general additive-target bridges.
+
+== The very first Agda proof: `C-monotone`
+
+Before any ψ-value is defined, we must know the closure stages form a
+coherent staged system: *increasing the stage index never removes
+previously generable terms*. This is the structural theorem every
+least-gap proof later leans on.
+
+=== Why this is first
+
+* `ψ(α)` is defined as the least ordinal *not already in `C(α)`*.
+  Without a stable closure, that definition has no ground.
+* Before attempting `psi-notin-C`, we need: closure is well-defined,
+  closure inclusion between stages is monotone, closure references
+  to earlier stages are admissible.
+* Monotonicity is provable by a clean structural induction on the
+  closure derivation, with no ordinal comparisons in sight.
+
+=== Why ℕ stages, not OT stages
+
+The first pass deliberately indexes closure stages by `ℕ`, not by
+ordinal terms. This lets the induction be direct, teaches us the
+closure-proof pattern, and avoids blocking on an OT ordering we have
+not yet formalised. Generalisation to ordinal-indexed stages is the
+point of E5.
+
+=== Statement
+
+----
+C-monotone : ∀ {m n t} → m ≤ n → C m t → C n t
+----
+
+Proof by induction on the closure derivation:
+
+* `c-zero`, `c-omega`: reconstruct at the larger stage.
+* `c-plus`: recurse on the two subderivations.
+* `c-psi k<m ck`: use `≤-trans k<m m≤n` to push the side condition
+  up. This case is the real point — it forces the closure to be
+  set up so the induction goes through.
+
+=== Acceptance criteria
+
+* `proofs/agda/Ordinal/Base.agda` compiles under `--safe --without-K`.
+* `proofs/agda/Ordinal/Closure.agda` compiles and defines `C` and
+  proves `C-monotone` *without postulates*.
+* `C-monotone` is pinned by name in `Smoke.agda`.
+* CI's full-suite and smoke jobs both pass.
+
+== What is *not* yet claimed
+
+* No ordinal semantics is asserted by these modules. `C`, `ψ`, and
+  the Ω markers are pure syntax with evidence-bearing relations.
+* Well-foundedness of the resulting notation system is a downstream
+  milestone (part of E5 / E6), not a consequence of E1–E3.
+* No connection to echo types is claimed until `EchoOrdinal.agda`
+  lands. Do not rename load-bearing echo modules in anticipation.
+
+== Operating rules (inherited)
+
+* No postulates unless explicitly isolated and justified in-line.
+* Keep universe levels explicit where needed.
+* Every edit ends with an Agda compile step; CI enforces full-suite
+  and smoke checks.
+* Claims in README / Zenodo metadata stay gated on
+  `roadmap-gates.adoc` regardless of progress on this workstream.

@@ -1,118 +1,122 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= RSR Template Repo - Explainme
-image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[License: MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
-
+= ordinal-notation: explainme
 :toc:
 :icons: font
 
-This file explains how the key template claims map to real files.
+This file maps each claim made about this repository to the module and theorem
+that carry it. It also says plainly what is *not* proved.
 
-== Central Session Protocol Authority
+All paths are under `verification/proofs/agda/Ordinal/`. Every module named
+here is gated in `verification/proofs/agda/MANIFEST`, is imported by
+`All.agda`, and compiles under `--safe --without-K` with no postulates. The one
+exception is `Buchholz/Fidelity.agda`, which is described in its own section
+below.
 
-Claim:
-Session protocols are centrally maintained and not duplicated in this template.
+== Brouwer ordinals and well-foundedness
 
-How this is implemented:
+Claim:: The Brouwer ordinals carry a well-founded strict order.
+Carried by:: `wf-<′` in `Brouwer/Phase13.agda`.
 
-* The local dispatcher (`session/dispatch.sh`) maps canonical commands to central
-  protocol paths in `standards/3-practice/session-management-standards`.
-* Local files (`session/custom-checks.k9`, `session/local-hooks.sh`,
-  `coordination.k9`) are integration-only.
+== Ordinal exponentiation and ε₀
 
-Caveat:
+Claims::
+* `ω^^_` raises ω to an ordinal power, including limit exponents.
+* `ε₀` is defined and is an ε-number: a fixed point of `ω^^` in both `≤′`
+  directions.
+* `ω^^` is inflationary.
+Carried by::
+`ω^^_`, `ε₀`, `ε₀-ε-number` and `ω^^-infl`, all in `Brouwer/OrdinalExp.agda`.
 
-* If `SESSION_STANDARDS_DIR` is unset and no adjacent standards checkout exists,
-  the dispatcher records the command but cannot resolve central checklist paths.
+== The Veblen hierarchy up to Γ₀
 
-== Canonical Command Surface
+Claims::
+* Every value of φ₁ is an ε-number (`φ₁-ε-number`, `Brouwer/VeblenPhi.agda`).
+* `next-ε β` is the *least* ε-number above β (`next-ε-least`,
+  `Brouwer/VeblenPhiNormal.agda`).
+* The binary Veblen function `φ` and the diagonal `Γ₀` are defined, in
+  `Brouwer/VeblenBinary.agda`.
+* Every level of `φ` is monotone in its second argument and satisfies the
+  Veblen recurrence (`φ-mono₂` and `φ-level-fixed-≤`,
+  `Brouwer/VeblenBinaryNormal.agda`).
+* `φ` takes a monotone step in its first argument, and `Γ₀ ≤′ φ_Γ₀(0)` holds
+  (`φ-mono₁-step` and `Γ₀-prefixed`, `Brouwer/VeblenBinaryMono.agda`).
+* The fixed-point engine gives the least fixed point (`nextFix-least`,
+  `Brouwer/VeblenBinaryLeast.agda`).
+* The fixed-point engine and the derivative are monotone in the iterated
+  function (`nextFix-mono-in-g` and `deriv-mono-in-g`,
+  `Brouwer/VeblenBinaryMonoG.agda`).
 
-Claim:
-Template bindings align to one canonical command model.
+Not proved:: The reverse inequality `φ_Γ₀(0) ≤′ Γ₀`, and so the claim that Γ₀
+is the least fixed point of the diagonal. `Γ₀-fixed-from-closure`
+(`Brouwer/VeblenBinaryLeast.agda`) reduces it to an explicit closure
+obligation, and that obligation is *open*.
 
-How this is implemented:
+Two modules are checked refutations. Each proves that a tempting lemma is
+false, so the route that needs it is not tried again:
+`Brouwer/StrictLeftMonoRefuted.agda` (strict left-monotonicity of `_⊕_`) and
+`Brouwer/AdditivePrincipalGenericRefuted.agda` (additive principality of
+generic sums).
 
-* `Justfile` provides thin aliases (`intake-repo`, `checkpoint-change`,
-  `verify-maintenance`, `verify-substantial`, `verify-release`, `close-planned`,
-  `close-urgent`, `recover-repo`, `handover-*`).
-* Every alias calls `session/dispatch.sh` with canonical verb-object pairs.
+== Buchholz terms and their orders
 
-Caveat:
+Claims::
+* The partial Buchholz order `_<ᵇ_` on the admitted core is well-founded
+  (`wf-<ᵇ`, `Buchholz/WellFounded.agda`). The proof is structural and uses no
+  rank.
+* The doubled-ladder order `_<ᵇ²_` is ordinally sound. The rank `rank2` is
+  strictly monotone over all twelve core constructors (`rank2-mono-<ᵇ²`), so
+  `_<ᵇ²_` is well-founded by transport along `rank2` (`wf-<ᵇ²`). Both are in
+  `Buchholz/RankDoubledLadderUmbrella.agda`.
+* The recursive surface order, restricted to the sound carrier, is
+  well-founded with *no* budget (`wf-<ᵇʳᶠ²`,
+  `Buchholz/RecursiveSurfaceSound.agda`).
+* The budgeted recursive surface order is well-founded (`wf-<ᵇʳᶠᵇ`,
+  `Buchholz/RecursiveSurfaceBudget.agda`).
+* The Brouwer order and its well-foundedness are packaged as a target notation
+  (`bh-notation-from`, `Buchholz/BHTarget.agda`). This fixes only the order,
+  not the embedding into it.
 
-* Recipes are wrappers only. They do not replace protocol content from
-  the central standards repo.
+Not proved:: Global well-foundedness of the unbudgeted recursive surface order
+over the native `_<ᵇ_`. The routes tried are recorded as walled in
+`docs/bridges/buchholz-rank-obstruction.adoc`. The native `_<ᵇ_` is not
+ordinally sound, so no rank embedding can map it. Its well-foundedness comes
+from `wf-<ᵇ` directly.
 
-== Runtime State Is Local
+== Early layers
 
-Claim:
-Session state is per-repository runtime output, not standards text.
+* Cantor normal form, with trichotomy: `cnf-trichotomy` in `CNF.agda`.
+* The ℕ-staged closure is monotone: `C-monotone` in `Closure.agda`.
+* The pedagogical ψ is least: `psi-least` in `PsiSimple.agda`.
 
-How this is implemented:
+== Order-type fidelity: open, with two postulates
 
-* `session/dispatch.sh` writes command and continuity-core capture stubs to
-  `.session/LAST-CANONICAL-COMMAND.md` in the target repository path.
+Claim (OPEN):: The Buchholz order on `WfBT` has order type ψ₀(Ω_ω).
 
-Caveat:
+`Buchholz/Fidelity.agda` states this theorem in a typed form. It assumes two
+postulates:
 
-* Runtime files are intentionally lightweight and require human/agent completion.
+* `denotation`, an order-preserving embedding into the target notation;
+* `ordinal-upper-bound`, a bound on its image.
 
-== Template Token Policy
+The candidate height is a module parameter (`Fidelity.AtHeight`), not an
+axiom. The file is not `--safe`. It is left out of `All.agda` and is recorded
+as `quarantine` in the MANIFEST, and the gate checks that it still fails
+`--safe`.
 
-Claim:
-Placeholders are explicit template content until initialization.
+Discharging the postulates needs the ordinal-collapsing function that would
+produce the height. That function is not built. ψ₀(Ω_ω) lies far above Γ₀, so
+the Veblen ladder alone does not reach it. See `Fidelity-OPEN-postulates.adoc`
+and `docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc`.
 
-How this is implemented:
+== How the checks are run
 
-* `README.adoc` and bootstrap recipes keep `{{TOKEN}}` placeholders visible.
-* `just init` performs token replacement.
+* `agda verification/proofs/agda/All.agda` checks everything that is gated.
+* `just proof-check-agda` runs `scripts/check-proofs.sh agda`. It compiles each
+  gated module with `--safe`, confirms that the quarantined module still fails,
+  and fails if any `.agda` file is missing from the MANIFEST.
+* `Buchholz/Smoke.agda` pins the headline names, so a renamed theorem breaks
+  the build.
 
-Caveat:
-
-* Uninitialized placeholders must not be treated as project-specific truth.
-
-== Dependency Updates (Dependabot)
-
-Claim:
-Dependency bumps land fast and safely, without manual chasing.
-
-How this is implemented:
-
-* `dependabot.yml` watches the Dependabot-supported ecosystems the estate
-  actually uses: `github-actions`, `cargo`, `mix` (Elixir), `docker`.
-* `dependabot-automerge.yml` auto-merges *every* bump (patch/minor/major,
-  security or routine) **once the required checks are green** — a broken bump
-  fails CI and stays open (you get an email); it never lands on a red `main`.
-
-Caveat:
-
-* Dependabot has **no  or Bun ecosystem**, and `pnpm` only rides under the
-  `npm` ecosystem (itself banned). For this -first estate Dependabot cannot
-  watch the runtime dependencies; the `npm`/`pip` entries are retained only for
-  transitional/legacy manifests and are otherwise inert.  dependency
-  currency is managed via `.json`/`.lock`, not Dependabot.
-* Do **not** add Dependabot as a ruleset *bypass* actor: that lets bumps skip
-  the required checks (secret-scanning, SAST), removing the safety gate and the
-  "it broke" signal. Auto-merge-on-green gives fast merges without it.
-
-== Julia Registry Packages — Standalone Repo Requirement
-
-Claim:
-If this template is used to create a Julia package, it must remain a standalone repository registered with the Julia package registry.
-
-How this is implemented:
-
-* Julia's package registry (General.jl or other) expects each package to be a standalone GitHub repository with `Project.toml` at the repository root.
-* Installation via `Pkg.add()`, dependency resolution, and automated CI/CD all depend on this canonical structure.
-
-Caveat:
-
-* Do NOT move this repository into a monorepo or subdirectory, as this breaks registry registration and package discoverability.
-* Julia packages published to a registry must each remain a standalone top-level repository (registry registration and package discovery require it).
-* Non-registry Julia packages can be organized differently if they are not published to any registry.
-
-
-== License
-
-This project is licensed under the Mozilla Public License, v. 2.0. See the `LICENSE` file for details.
-
-SPDX-License-Identifier: CC-BY-SA-4.0
+There is no CI workflow for the proofs yet. Until one exists, these checks run
+locally.

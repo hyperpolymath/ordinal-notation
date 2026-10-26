@@ -1,4 +1,82 @@
 # Agda proof manifest — read by scripts/check-proofs.sh agda
 # Format: <source-root>|<module-relative-to-source-root>|gated|quarantine|<note>
-# Ground-truthed 2026-07-17 with agda (agda --safe).
-verification/proofs/agda|Properties.agda|gated| compiles under `agda --safe`
+# gated = must compile under `agda --safe`; quarantine = must keep failing under it.
+# Imported from echo-types 703dd77 (2026-10-26); every gated module compiles under
+# `agda --safe` with Agda 2.6.3 and agda-stdlib 2.3.
+verification/proofs/agda|All.agda|gated| aggregator: imports every --safe module
+verification/proofs/agda|Ordinal/Base.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/AdditivePrincipalGenericRefuted.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/Arithmetic.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/OmegaPow.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/OrdinalExp.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/Phase13.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/StrictLeftMonoRefuted.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/VeblenBinary.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/VeblenBinaryLeast.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/VeblenBinaryMono.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/VeblenBinaryMonoG.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/VeblenBinaryNormal.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/VeblenPhi.agda|gated|
+verification/proofs/agda|Ordinal/Brouwer/VeblenPhiNormal.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/BHTarget.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/Closure.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/Examples.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/ExtendedOrder.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/Fidelity.agda|quarantine| not --safe by design: declares the two open postulates denotation and ordinal-upper-bound; see Fidelity-OPEN-postulates.adoc
+verification/proofs/agda|Ordinal/Buchholz/HeadOmega.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/HeadOmegaInversion.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/IteratedExtendedOrder.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/LiftedExtendedOrder.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/Order.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/OrderExtended.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/OrderExtendedBudget.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/OrderExtendedDirect.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/OrderExtendedSound.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/OrderRestricted.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/Psi.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankAdm.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankBrouwer.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankDoubledLadder.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankDoubledLadderAddPrincipal.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankDoubledLadderMono.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankDoubledLadderMonoPlus.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankDoubledLadderMonoPlus2.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankDoubledLadderUmbrella.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankLex.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankLexJointBplus.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankLexSlice3.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankMonoSameLeft.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankMonoUmbrella.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankMonoUmbrellaSlice3.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankMonoUmbrellaSlice4.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankMonoUnion.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankMonoUnionWF.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankMonoUnionWfCNF.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankPartial.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankPow.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankPowDomination.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankPowMonoRefuted.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankPowSlice3.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RankPowSlice3Headline.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RecursiveSurfaceBudget.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RecursiveSurfaceOrder.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/RecursiveSurfaceSound.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/Smoke.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/SurfaceOrder.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/Syntax.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/VeblenComparisonModel.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/VeblenComparisonTarget.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/VeblenIdentityModel.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/VeblenInterface.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/VeblenMeasureTarget.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/VeblenObligations.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/VeblenProjectionMeasure.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/WellFormed.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/WellFormedAdmissible.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/WellFormedCNF.agda|gated|
+verification/proofs/agda|Ordinal/Buchholz/WellFounded.agda|gated|
+verification/proofs/agda|Ordinal/CNF.agda|gated|
+verification/proofs/agda|Ordinal/Closure.agda|gated|
+verification/proofs/agda|Ordinal/OmegaMarkers.agda|gated|
+verification/proofs/agda|Ordinal/PsiSimple.agda|gated|
