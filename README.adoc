@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 // SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath)
-= {{PROJECT_NAME}}
+= ordinal-notation
 :toc:
 :toc-placement: preamble
 
@@ -12,18 +12,17 @@ image:https://img.shields.io/badge/Provenance-Quantum--Safe-blueviolet[Quantum-S
 
 // ── Standard & quality gates ────────────────────────────────────────────────
 image:https://img.shields.io/badge/RSR-Rhodium_Standard-9C27B0[Rhodium Standard Repository,link="https://github.com/hyperpolymath/rhodium-standard-repositories"]
-image:https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/{{OWNER}}/{{REPO}}/governance-badges/badges/k9.json[K9 conformance,link="https://github.com/{{OWNER}}/{{REPO}}/actions/workflows/dogfood-gate.yml"]
-image:https://www.bestpractices.dev/projects/{{OPENSSF_BP_ID}}/badge[OpenSSF Best Practices,link="https://www.bestpractices.dev/projects/{{OPENSSF_BP_ID}}"]
-image:https://api.scorecard.dev/projects/github.com/{{OWNER}}/{{REPO}}/badge[OpenSSF Scorecard,link="https://scorecard.dev/viewer/?uri=github.com/{{OWNER}}/{{REPO}}"]
-image:https://sonarcloud.io/api/project_badges/measure?project={{OWNER}}_{{REPO}}&metric=alert_status[SonarQube Quality Gate,link="https://sonarcloud.io/summary/new_code?id={{OWNER}}_{{REPO}}"]
-image:https://archive.softwareheritage.org/badge/origin/https://{{FORGE}}/{{OWNER}}/{{REPO}}/[Archived in Software Heritage,link="https://archive.softwareheritage.org/browse/origin/?origin_url=https://{{FORGE}}/{{OWNER}}/{{REPO}}"]
+image:https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/hyperpolymath/ordinal-notation/governance-badges/badges/k9.json[K9 conformance,link="https://github.com/hyperpolymath/ordinal-notation/actions/workflows/dogfood-gate.yml"]
+image:https://api.scorecard.dev/projects/github.com/hyperpolymath/ordinal-notation/badge[OpenSSF Scorecard,link="https://scorecard.dev/viewer/?uri=github.com/hyperpolymath/ordinal-notation"]
+image:https://sonarcloud.io/api/project_badges/measure?project=hyperpolymath_ordinal-notation&metric=alert_status[SonarQube Quality Gate,link="https://sonarcloud.io/summary/new_code?id=hyperpolymath_ordinal-notation"]
+image:https://archive.softwareheritage.org/badge/origin/https://github.com/hyperpolymath/ordinal-notation/[Archived in Software Heritage,link="https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/hyperpolymath/ordinal-notation"]
 
 // ── Provenance & ecosystem ──────────────────────────────────────────────────
 image:https://img.shields.io/badge/Idris-Inside-5E5086?logo=idris&logoColor=white[Idris Inside,link="https://github.com/hyperpolymath/proven"]
 image:https://img.shields.io/badge/Zig-Zero--overhead-F7A41D?logo=zig&logoColor=black[Zig Zero-overhead FFI,link="https://github.com/hyperpolymath/typed-wasm"]
-image:https://api.thegreenwebfoundation.org/greencheckimage/{{FORGE}}[Green Web,link="https://www.thegreenwebfoundation.org/green-web-check/?url={{FORGE}}"]
+image:https://api.thegreenwebfoundation.org/greencheckimage/github.com[Green Web,link="https://www.thegreenwebfoundation.org/green-web-check/?url=github.com"]
 
-{{PROJECT_DESCRIPTION}}
+Constructive Agda development of ordinal notations, extracted from echo-types: Brouwer ordinals, the Veblen hierarchy up to a defined Γ₀, and a Buchholz-style term order with machine-checked well-foundedness under --safe --without-K. Frozen hand-off record; order-type fidelity to ψ₀(Ω_ω) is open.
 
 [IMPORTANT]
 ====
@@ -71,7 +70,7 @@ commands to paste):
 
 [source,text]
 ----
-Create a new repository from https://github.com/hyperpolymath/rsr-template-repo
+Create a new repository from https://github.com/hyperpolymath/ordinal-notation
 ----
 
 The URL is the key: it leads the assistant to
@@ -80,7 +79,7 @@ complete step-by-step recipe. The assistant checks your system, installs the
 prerequisites, instantiates the template with `just repo-init`, and verifies the
 result with `just doctor`.
 
-* "Set up rsr-template-repo so I can work on the template itself — https://github.com/hyperpolymath/rsr-template-repo"
+* "Set up ordinal-notation so I can work on the template itself — https://github.com/hyperpolymath/ordinal-notation"
 * `./launcher.sh --ai-setup` (or `just ai-setup`) prints the line and the guide path.
 
 === What you will be asked
@@ -94,7 +93,7 @@ result with `just doctor`.
 
 [IMPORTANT]
 ====
-Setting up rsr-template-repo clones this repository and installs its developer
+Setting up ordinal-notation clones this repository and installs its developer
 tools per-user with mise (no administrator rights, nothing sent anywhere).
 `just repo-init` rewrites files only inside the new checkout; it creates no
 remote repository and pushes nothing until you do.
@@ -121,7 +120,7 @@ maintainers can brief an AI with `just ai-warmup dev` / `just ai-warmup maintain
 * *Machine-readable metadata* (`.machine_readable/descriptiles/`) — `STATE`, `META`,
   `ECOSYSTEM`, `PLAYBOOK`, `AGENTIC`, `NEUROSYM`, `CLADE`, and `anchors/ANCHOR`,
   in deed, so tools and agents can read the project's state and boundaries.
-* *AI gatekeeper protocol* — `rsr-template-repo_chora.deed` (the repo deed) is the
+* *AI gatekeeper protocol* — `ordinal-notation_chora.deed` (the repo deed) is the
   universal entry point that tells an AI agent how to work in this repo before it
   touches anything; it carries the AI allocation policy and the ply directory tree.
 * *Typed ABI/FFI seam* — `src/interface/Abi/` (Idris2 type + layout proofs) over
