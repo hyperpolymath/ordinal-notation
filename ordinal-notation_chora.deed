@@ -83,13 +83,13 @@
   (identity
     :primary-forge github
     :owner "hyperpolymath"
-    :prefixed-name "UNASSIGNED-ordinal-notation")
+    :prefixed-name "fv-ordinal-notation")
   (clade
-    :primary UNASSIGNED
-    :primary-name "UNASSIGNED"
+    :primary fv
+    :primary-name "Formal Verification & Proofs"
     :secondary ()
     :assigned "2026-10-26"
-    :rationale "")
+    :rationale "Its whole content is machine-checked Agda proofs about ordinal notations; it has no runtime component.")
   (forges
     :github "hyperpolymath/ordinal-notation")
   ; :type is one of standalone monorepo monorepo-child inflated deflated hub
@@ -127,8 +127,8 @@
     :project "ordinal-notation"
     :ecosystem "hyperpolymath"
     :position-type "UNASSIGNED"
-    :purpose "UNASSIGNED"
-    :not ()
+    :purpose "Constructive Agda development of ordinal notations (Brouwer ordinals, the Veblen hierarchy up to Γ₀, Buchholz term orders and their well-foundedness), extracted from echo-types as a frozen hand-off record."
+    :not ("a proof that the Buchholz order has order type ψ₀(Ω_ω): that is open" "part of echo-types, which keeps only its EchoOrdinal bridge" "an active project: the climb is frozen by decision D-2026-06-21")
     :pipeline-position "UNASSIGNED"
     :chain "UNASSIGNED"
     :coordination standards
@@ -199,7 +199,7 @@
     :version "0.1.0"
     :last-updated "2026-10-26"
     :project "ordinal-notation"
-    :purpose "Canonical RSR (Rhodium Standard Repository) template — governance, CI/CD, machine-readable metadata, ABI/FFI seam and formal-verification scaffolding that hyperpolymath projects are instantiated from."
+    :purpose "Constructive Agda development of ordinal notations, extracted from echo-types; a frozen hand-off record."
     (agent :name CLAUDE :role "proofs, compilers, repo-local implementation, CI/CD, formal verification, Rust/Idris2/Zig")
     (agent :name CHATGPT :role "prose, papers, publication review, standards docs, outreach drafts, letters")
     (agent :name GEMINI :role "estate audits, cross-repo sweeps, long-context triage, pattern detection")
@@ -349,9 +349,9 @@
     (identity
       :project "ordinal-notation"
       ; language | library | service | tool
-      :kind "UNASSIGNED"
+      :kind "library"
       :one-sentence "Constructive Agda development of ordinal notations, extracted from echo-types: Brouwer ordinals, the Veblen hierarchy up to a defined Γ₀, and a Buchholz-style term order with machine-checked well-foundedness under --safe --without-K. Frozen hand-off record; order-type fidelity to ψ₀(Ω_ω) is open."
-      :domain "UNASSIGNED")
+      :domain "proof theory: ordinal notations")
     (semantic-authority
       :policy "canonical"
       :owns (
