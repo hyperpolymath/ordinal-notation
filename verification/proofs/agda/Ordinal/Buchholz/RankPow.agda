@@ -455,8 +455,9 @@ rank-mono-<ᵇ-+1-ψ-target {x₁} {x₂} {ν} {α} {y₂} =
 --       WfCNF t → rank-pow t <′ ω-rank-pow-succ (head-Ω t)`
 --     in its full generality.  Both per-marker dominances now hold;
 --     the structural recursion on the WfCNF carrier (the bplus case
---     in particular) is Slice 2-bplus.  See the `TODO(slice-2-bplus)`
---     marker further down.
+--     in particular) is Slice 2-bplus, which has since landed in
+--     `Ordinal.Buchholz.RankPowDomination`.  See the Slice 2-bplus
+--     note further down.
 --
 -- ## History note: the original ω-branch obstruction
 --
@@ -568,10 +569,11 @@ rank-pow-bpsi-via-head-Ω _ _ = refl
 --
 -- The abstractions landed here (`ω-rank-pow-succ` + both per-marker
 -- dominances + the atomic factoring) close everything Slice 2 promised
--- *except* the full domination lemma over the WfCNF carrier.  One
--- follow-on remains.
+-- *except* the full domination lemma over the WfCNF carrier.
 --
--- TODO(slice-2-bplus).  Prove the full lemma
+-- Slice 2-bplus (LANDED in `Ordinal.Buchholz.RankPowDomination` as
+-- `rank-pow-dominated-by-head-Ω`; this note keeps the original plan).
+-- The full lemma
 --   rank-pow-dominated-by-head-Ω : (t : BT) → NonBzero t → WfCNF t
 --                                → rank-pow t <′ ω-rank-pow-succ (head-Ω t)
 -- by structural recursion on the WfCNF carrier.  Both per-marker

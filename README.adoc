@@ -39,7 +39,7 @@ it stood. Nothing here is claimed beyond what the proofs state.
 
 The reverse direction is reduced to an explicit closure obligation
 (`Γ₀-fixed-from-closure`) and is *not* proved. See
-link:Fidelity-OPEN-postulates.adoc[Fidelity-OPEN-postulates.adoc] and
+link:verification/proofs/agda/Fidelity-OPEN-postulates.adoc[Fidelity-OPEN-postulates.adoc] and
 `docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc`.
 
 === The two postulates
@@ -86,7 +86,7 @@ registered under the library name `standard-library`.
 agda verification/proofs/agda/All.agda
 ----
 
-`ordinal-notation.agda-lib` sets the include path. The template proof gate
+`verification/proofs/agda/ordinal-notation.agda-lib` sets the include path. The template proof gate
 checks every module listed in `verification/proofs/agda/MANIFEST`: 76 gated
 modules, plus `Fidelity.agda`, which must keep failing `--safe`.
 

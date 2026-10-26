@@ -39,7 +39,7 @@
 -- ## Design notes
 --
 -- * The `NonBzero` premise originally planned in `RankPow.agda`'s
---   Slice 2-bplus TODO turned out unnecessary — `rank-pow bzero =
+--   Slice 2-bplus plan turned out unnecessary — `rank-pow bzero =
 --   oz` is *strictly* below `ω-rank-pow-succ (fin 0) = ω^2` via
 --   `ω^_-pos 2`, so the bzero case is covered uniformly without a
 --   discriminator.  This simplifies the structural recursion's

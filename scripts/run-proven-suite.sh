@@ -125,6 +125,11 @@ if require_file scripts/emit-aggregate-inputs.sh; then
     bash scripts/emit-aggregate-inputs.sh "$REPORT_PATH"
 fi
 
+# Agda trusted base: exactly the two declared Fidelity postulates, no escape
+# pragmas (the exact-count check .cicd-hygiene-allow requires for that file).
+require_file scripts/check-agda-trusted-base.sh && \
+  run_lane "Agda trusted base (exact postulate count)" bash scripts/check-agda-trusted-base.sh
+
 # ── Tier 2: Repository invariant & estate data-format gates ──────────────────
 require_file scripts/check-root-shape.sh && \
   run_lane "Root shape bidirectional allowlist" bash scripts/check-root-shape.sh .

@@ -106,7 +106,7 @@ as `quarantine` in the MANIFEST, and the gate checks that it still fails
 
 Discharging the postulates needs the ordinal-collapsing function that would
 produce the height. That function is not built. ψ₀(Ω_ω) lies far above Γ₀, so
-the Veblen ladder alone does not reach it. See `Fidelity-OPEN-postulates.adoc`
+the Veblen ladder alone does not reach it. See `verification/proofs/agda/Fidelity-OPEN-postulates.adoc`
 and `docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc`.
 
 == How the checks are run

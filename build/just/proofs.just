@@ -8,8 +8,11 @@
 # scan for dangerous/unsafe constructs and report status. Run via
 # `just proof-check-all` for the full sweep.
 
-# Check all formal proofs (this repository has Agda proofs only)
-proof-check-all: proof-check-agda proof-scan-dangerous
+# Check all formal proofs (this repository has Agda proofs only). The generic
+# proof-scan-dangerous is not in this sweep: it has no allowlist, so it always
+# flags the two sanctioned Fidelity postulates. proof-trusted-base is the
+# stricter replacement here: it pins exactly those two and refuses any other.
+proof-check-all: proof-check-agda proof-trusted-base
     @echo "=== All proof checks complete ==="
 
 # Each proof-check-<prover> delegates to scripts/check-proofs.sh, the single
@@ -33,6 +36,11 @@ proof-check-agda:
 # Check Coq proofs (per MANIFEST; fatal if coqc absent)
 proof-check-coq:
     @bash scripts/check-proofs.sh coq
+
+# Pin the Agda trusted base: exactly the two declared Fidelity postulates, no
+# other postulate, no escape pragma. See scripts/check-agda-trusted-base.sh.
+proof-trusted-base:
+    @bash scripts/check-agda-trusted-base.sh
 
 # Scan for dangerous constructs USED in proof code (believe_me, sorry, Admitted,
 # postulate, ...). Comments are ignored — a comment naming a banned construct
