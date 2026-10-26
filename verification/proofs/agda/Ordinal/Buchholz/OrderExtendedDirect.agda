@@ -90,16 +90,20 @@ infix 4 _<ᵇᵈ_
 unΩ : BT → OmegaIndex
 unΩ (bOmega μ) = μ
 unΩ (bpsi ν _) = ν
-unΩ _          = ω
+unΩ bzero      = ω
+unΩ (bplus _ _) = ω
 
 unArg : BT → BT
 unArg (bpsi _ α)  = α
 unArg (bplus _ y) = y
-unArg _           = bzero
+unArg bzero       = bzero
+unArg (bOmega _)  = bzero
 
 unLeft : BT → BT
 unLeft (bplus x _) = x
-unLeft _           = bzero
+unLeft bzero       = bzero
+unLeft (bOmega _)  = bzero
+unLeft (bpsi _ _)  = bzero
 
 bOmega-inj : ∀ {μ ν} → bOmega μ ≡ bOmega ν → μ ≡ ν
 bOmega-inj e = cong unΩ e
