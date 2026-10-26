@@ -199,12 +199,21 @@ g -C "$C" diff --quiet -- docs/architecture/REPOSITORY-MAP.adoc \
     || { g -C "$C" diff -- docs/architecture/REPOSITORY-MAP.adoc | head -20 >&2; fail 'the committed map is stale'; }
 # Negative control: index mode, run where the mint runs it (before the first
 # commit, after a removal), reproduces the stale map lintel shipped.
-SM="$work/stale-map"
-use_template "$SM"
-(cd "$SM" && rm -rf archetypes && bash scripts/gen-repo-map.sh . >/dev/null)
-grep -q '^| `archetypes' "$SM/docs/architecture/REPOSITORY-MAP.adoc" \
-    || fail 'control: index mode no longer shows the pre-commit staleness; this check is vacuous'
-pass "the committed map is fresh (the index-mode control reproduces lintel's stale map)"
+# The control removes archetypes/, so it needs a tree that has one: the
+# template. A minted repo removed archetypes/ at mint and has nothing to
+# remove, so there the control is skipped by name (as the archetype-lock and
+# container-KYAML tests skip), and the freshness check above still runs.
+if [ -d "$T/archetypes" ]; then
+    SM="$work/stale-map"
+    use_template "$SM"
+    (cd "$SM" && rm -rf archetypes && bash scripts/gen-repo-map.sh . >/dev/null)
+    grep -q '^| `archetypes' "$SM/docs/architecture/REPOSITORY-MAP.adoc" \
+        || fail 'control: index mode no longer shows the pre-commit staleness; this check is vacuous'
+    pass "the committed map is fresh (the index-mode control reproduces lintel's stale map)"
+else
+    echo "SKIP: index-mode control: no archetypes/ here, so this is a minted repo"
+    pass "the committed map is fresh"
+fi
 
 (cd "$C" && env -u GITHUB_REPOSITORY bash scripts/check-no-placeholders.sh .) > "$work/ph.log" 2>&1 \
     || { cat "$work/ph.log" >&2; fail 'the minted child fails its own placeholder gate'; }
