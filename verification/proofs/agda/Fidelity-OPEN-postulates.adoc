@@ -4,121 +4,76 @@ Companion to `+verification/proofs/agda/Ordinal/Buchholz/Fidelity.agda+`. Open
 problem *`+D-2026-06-14+`*
 (`+docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc+`).
 
-[WARNING]
-.Design audit (2026-11-09): the fidelity specification is not satisfiable as stated
-====
-The two postulates cannot both hold, so they can never be discharged as
-written:
+=== Status (restated 2026-11-09)
 
-* `denotation` includes `cofinal : (o : 𝒪) → Σ BT (λ t → WfBT t × (o <𝒪 ⟦ t ⟧))`.
-  Taking `o := bh-height` gives a well-formed `t` with `bh-height <𝒪 ⟦ t ⟧`,
-  which `ordinal-upper-bound` refutes. Inside `AtHeight` the two postulates
-  derive `⊥`. Cofinality into *all* of Brouwer `Ord` is also unsatisfiable on
-  its own: `BT` is countable, and the `olim` of an enumeration of its image
-  bounds it.
-* `ordinal-upper-bound` ranges over *every* `WfBT` term, including
-  `bOmega (fin 1)` and `bOmega ω`, which any faithful denotation sends above
-  ψ₀(Ω_ω). The step "markers ≤ ω ⇒ denotation ≤ ψ₀(Ω_ω)" in the table
-  below is therefore false as mathematics, not merely open.
-* The statement is posed over `_<ᵇ²_`, which has no constructor relating two
-  ψ terms at the same index (`<ᵇ²-ψΩ` needs `μ <Ω ν` strictly), and whose
-  ψ-headed sources must satisfy `WfAdm` (`rank-pow α <′ ω-rank-pow ν`). `BH`
-  itself fails that bound (ω^ω against ω^1). So `_<ᵇ²_` leaves out the
-  ψ₀ fragment the fidelity claim is about. `wf-<ᵇ²` is still a genuine
-  theorem; it is just the wrong carrier for fidelity.
+The 2026-11-09 design audit found the previous specification unsatisfiable,
+and it was restated the same day. The order-type claim is still *OPEN*.
+Nothing here asserts that any order type is proven.
 
-A correct restatement needs cofinality *below* the height
-(`∀ o → o <𝒪 bh-height → …`), an upper bound over the terms below `BH`
-(or over the ψ₀-image) rather than all of `WfBT`, and a carrier that orders
-same-index ψ terms, such as `_<ᵇʳᶠ²_` (which has `ψα`). Until then the
-fidelity claim stays OPEN, and the spec itself is recorded as defective.
-====
+=== What the module now states
 
-=== Plain-language summary
+The order type of the *sound carrier*: terms satisfying `+WfAdm+`, ordered
+by `+_<ᵇ²_+`. It postulates a height `+carrier-height : Ord+` and a
+denotation `+⟦_⟧ : BT → Ord+` into the real Brouwer order
+(`+bh-notation-from+`, `+--safe+`, `+BHTarget.agda+`) that
 
-*What is now mechanised.* Only the _shape_ of the order-type fidelity
-claim, plus one genuinely-proved structural fact:
+* *preserves* `+_<ᵇ²_+` on `+WfAdm+` terms;
+* *reflects* it up to transitive closure (`+⟦s⟧ <′ ⟦t⟧ → TransClosure _<ᵇ²_ s t+`).
+  No transitivity lemma for `+_<ᵇ²_+` exists, and `+_<′_+` is transitive,
+  so reflecting into `+_<ᵇ²_+` itself could force a transitivity that may be
+  false;
+* is *strictly bounded* by the height (`+WfAdm t → ⟦t⟧ <′ carrier-height+`);
+* is *cofinal below* the height
+  (`+o <′ carrier-height → Σ t, WfAdm t × o <′ ⟦t⟧+`).
 
-* The *theorem shape* is typed and auditable: `+Fidelity.agda+` states
-"`the sound carrier `+_<ᵇ²_+` (on well-formed terms `+WfBT+`) has order
-type ψ₀(Ω_ω)`" as a cofinal order-embedding into a Bachmann–Howard
-structure (`+OrderTypeBH+`, assembled in `+fidelity+`). The statement is
-quantified over the *sound carrier only* — never native `+_<ᵇ_+`.
-* The *lower-bound half* (`+fidelity-lower+`) is a real term _given the
-postulated denotation_: the BH height is attained by the well-formed
-carrier term `+BH = ψ₀(Ω_ω)+` itself (it plumbs `+BH+`, `+BH-wf+`, and
-the denotation’s `+pins-BH+` field — no postulate of its own).
-* The *grammar-level upper shadow* (`+marker-≤ω+`, `+markers-≤ω+`) is
-proved *for real, postulate-free*: every Ω-marker in any Buchholz term
-is `+≤Ω ω+` (the carrier lives in the ν ≤ ω fragment; the notation never
-names a marker above Ω_ω). This is the structural precondition of the
-upper bound, _not_ the upper bound itself.
-* The *target structure* `+(𝒪, _<𝒪_, wf-<𝒪)+` is now *real,
-postulate-free* (2026-06-15): `+Ordinal.Buchholz.BHTarget+` constructs
-it from the Brouwer order (`+Ord+` / `+_<′_+` / `+wf-<′+`) via
-`+bh-notation-from+`, inside the `+--safe+` kernel (wired into
-`+All.agda+`, pinned in `+Ordinal/Buchholz/Smoke.agda+`). Only the
-candidate BH _height_ remains a free input — an explicit
-`+Fidelity.AtHeight+` module parameter.
+That is "the sound carrier has order type `+carrier-height+`", up to the
+transitive closure. Proved for real alongside it: `+markers-≤ω+`, every
+Ω-marker in a Buchholz term is `+≤Ω ω+`.
 
-*What remains genuinely open.* The two pieces of real content — the
-*order-reflecting, height-preserving denotation* `+⟦·⟧+` and its
-*cofinality* — are postulated. (The checked Bachmann–Howard target
-_structure_ is no longer assumed — see the last bullet above.) These are
-the missing _objects_, not missing _plumbing_.
-
-*Explicit non-claim.* _Nothing in this module asserts that order type
-ψ₀(Ω_ω) is proven._ `+fidelity+` is only as strong as the three
-postulates below (two, since 2026-06-15); with them open, it asserts the *shape* of fidelity,
-not fidelity. `+rank2+` (the height-collapsing termination measure) is
-*not* reused, extended, or tightened toward this claim — fidelity needs
-the separate, height-preserving `+⟦·⟧+`. The status surfaces (appendix,
-decision log, roadmap) continue to read *"`written at WF milestone;
-order-type fidelity OPEN`"* and were _not_ edited by this commit.
+*Explicit non-claim.* This is *not* the ψ₀(Ω_ω) claim. `+_<ᵇ²_+` has no
+constructor relating two ψ terms at the same index (`+<ᵇ²-ψΩ+` needs
+`+μ <Ω ν+` strictly), and its ψ-headed sources must satisfy `+WfAdm+`
+(`+rank-pow α <′ ω-rank-pow ν+`), which `+BH+` itself fails. So the carrier
+omits the ψ₀ fragment of the Buchholz order. Identifying its height with
+ψ₀(Ω_ω) needs a carrier with that fragment. `+_<ᵇʳᶠ²_+`, which adds the
+same-binder `+ψα+` congruence, is the nearest candidate, and it still keeps
+`+WfAdm+` on ψ sources. `+rank2+` is *not* a denotation: it is the
+height-collapsing termination measure, monotone but neither reflecting nor
+cofinal.
 
 === The postulates (complete list — `+grep postulate Fidelity.agda+`)
 
-As of 2026-06-15 there are *two* (reduced from three). The former
-`+bh-notation+` postulate is *discharged*: the target structure is now
-constructed for real in the `+--safe+` module
-`+Ordinal.Buchholz.BHTarget+` (`+bh-notation-from+` over the Brouwer
-order `+Ord+` / `+_<′_+` / `+wf-<′+`), and the candidate BH height is an
-explicit `+Fidelity.AtHeight+` module parameter rather than an axiom.
-
-[width="100%",cols="8%,11%,40%,29%,12%",options="header",]
+[width="100%",cols="6%,22%,40%,32%",options="header",]
 |===
-|# |Name |Statement (in words) |What closes it |Owner
-|1 |`+denotation : DenotesBH bh-notation+` |A denotation
-`+⟦·⟧ : BT → 𝒪+` (with `+𝒪 = Ord+`, `+_<𝒪_ = _<′_+`) that is
-*order-preserving* (`+s <ᵇ² t → ⟦s⟧ <′ ⟦t⟧+`), *order-reflecting*
-(`+⟦s⟧ <′ ⟦t⟧ → s <ᵇ² t+`), *cofinal* (image unbounded in `+Ord+`), and
-*pins BH* (`+⟦BH⟧ ≡ bh-height+`). The height-preserving embedding
-`+rank2+` is _not_. |Define `+⟦·⟧+` mapping each ψ_ν / Ω_ν / + to its
-genuine ordinal height (not the collapsed ω-power blocks of `+rank2+`)
-and prove the four fields. This is the core order-type-correctness work
-(a denotational semantics for the notation faithful to `+_<ᵇ²_+`).
-|*External mathematics* (owner / external); the design route is option
-(a) in `+D-2026-06-14+`.
-
-|2 |`+ordinal-upper-bound : ∀ {t} → WfBT t → ¬ (bh-height <𝒪 ⟦ t ⟧)+`
-|No well-formed carrier term denotes strictly above the BH height (the
-⟦·⟧-level upper half of the sandwich). |Cheap _given_ postulate #1:
-combine the real `+markers-≤ω+` (every marker `+≤Ω ω+`) with a height
-calculation through the real `+⟦·⟧+` (markers `+≤ ω+` ⇒ denotation
-`+≤ ψ₀(Ω_ω)+`). *2026-11-09: this step is false as stated* (see the
-warning above): the bound must range over terms below `BH`, not all of
-`WfBT`. It is postulated only because it quantifies over the
-not-yet-real `+⟦·⟧+`. |Discharged alongside / just after #1 (in-repo, once `+⟦·⟧+`
-is real).
+|# |Name |Statement |What closes it
+|1 |`+carrier-height : Ord+` |The height of the sound carrier. |Exhibit
+the `+Ord+` together with #2. A single postulated height asserts one
+existence claim. The previous design postulated a denotation for _every_
+candidate height, so an impossible height such as `+oz+` derived `+⊥+`.
+|2 |`+denotation : DenotesBelow carrier-notation+` |Preserving, reflecting
+(to transitive closure), bounded and cofinal-below map into the Brouwer
+order at `+carrier-height+`. |Define `+⟦_⟧+` sending each ψ_ν, Ω_ν and `+`
+to its genuine ordinal height on admissible terms, and prove the four
+fields. `+rank2+` gives preservation only.
 |===
 
-=== Discharge order
+=== History: what the audit found in the previous specification
 
-`+denotation+` (#1) is the genuine external content — the faithful
-height-preserving embedding into the now-real Brouwer target.
-`+ordinal-upper-bound+` (#2) is downstream of #1 and in-repo once #1
-lands. When both are real, `+fidelity : OrderTypeBH+` becomes an
-unconditional theorem (for the supplied `+AtHeight+` height) and a
-*human* may then update the appendix / decision-log / roadmap from
-"`OPEN`" to discharged — per the hard rule, this commit does not
-pre-empt that sign-off.
+* `+cofinal : (o : 𝒪) → Σ BT (λ t → WfBT t × (o <𝒪 ⟦ t ⟧))+` at
+  `+o := bh-height+` contradicted `+ordinal-upper-bound+`, so the two
+  postulates derived `+⊥+` inside `+AtHeight+`. Cofinality into all of
+  `+Ord+` is unsatisfiable on its own, since `+BT+` is countable.
+* `+ordinal-upper-bound+` ranged over every `+WfBT+` term, including
+  `+bOmega ω+`, which any faithful denotation sends above ψ₀(Ω_ω).
+* `+pins-BH : ⟦ BH ⟧ ≡ bh-height+` put a carrier element *at* the height,
+  which an order type equal to the height cannot have, and `+BH+` is not
+  `+WfAdm+` in any case.
+* The postulates sat inside a module parameterised by the height, so they
+  were assumed for every `+Ord+`.
+
+=== Discharge
+
+When both postulates are replaced by real terms, `+order-type+` becomes a
+theorem about the sound carrier. Only then may a *human* update the
+decision log and roadmap from "`OPEN`", and the ψ₀(Ω_ω) identification
+remains a separate open step.

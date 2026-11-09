@@ -23,7 +23,7 @@ verification/proofs/agda|Ordinal/Buchholz/BHTarget.agda|gated|
 verification/proofs/agda|Ordinal/Buchholz/Closure.agda|gated|
 verification/proofs/agda|Ordinal/Buchholz/Examples.agda|gated|
 verification/proofs/agda|Ordinal/Buchholz/ExtendedOrder.agda|gated|
-verification/proofs/agda|Ordinal/Buchholz/Fidelity.agda|quarantine| not --safe by design: declares the two open postulates denotation and ordinal-upper-bound; see Fidelity-OPEN-postulates.adoc
+verification/proofs/agda|Ordinal/Buchholz/Fidelity.agda|quarantine| not --safe by design: declares the two open postulates carrier-height and denotation; see Fidelity-OPEN-postulates.adoc
 verification/proofs/agda|Ordinal/Buchholz/HeadOmega.agda|gated|
 verification/proofs/agda|Ordinal/Buchholz/HeadOmegaInversion.agda|gated|
 verification/proofs/agda|Ordinal/Buchholz/IteratedExtendedOrder.agda|gated|

@@ -97,12 +97,12 @@ and agda-stdlib 2.3, and `scripts/check-agda-trusted-base.sh` passed.
 
 | Order type of the Buchholz order is ψ₀(Ω_ω)
 | `Buchholz/Fidelity.agda` (quarantined, two postulates)
-| `open`. The 2026-11-09 audit found the specification itself defective: the two postulates are jointly inconsistent, and the order it is stated over omits the ψ₀ fragment. See the warning in `verification/proofs/agda/Fidelity-OPEN-postulates.adoc`.
+| `open`. The 2026-11-09 audit found the earlier specification jointly inconsistent; it was restated the same day as the order type of the sound carrier (`WfAdm` under `_<ᵇ²_`), which omits the ψ₀ fragment, so even when discharged it is not yet the ψ₀(Ω_ω) claim. See `verification/proofs/agda/Fidelity-OPEN-postulates.adoc`.
 |===
 
 == Trusted base
 
-* The only postulates are `denotation` and `ordinal-upper-bound` in
+* The only postulates are `carrier-height` and `denotation` in
   `Buchholz/Fidelity.agda`. That file is not `--safe`, is not imported by any
   module, and is `quarantine` in the MANIFEST.
 * `scripts/check-agda-trusted-base.sh` pins exactly those two postulates and

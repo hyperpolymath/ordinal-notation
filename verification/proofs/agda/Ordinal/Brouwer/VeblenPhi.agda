@@ -28,7 +28,7 @@
 -- diagonal fixed point; ψ₀(Ω_ω) sits far above even Γ₀ and additionally
 -- needs the ordinal-collapsing layer.  Order-type fidelity (ψ₀(Ω_ω))
 -- therefore REMAINS OPEN (D-2026-06-14); this slice neither reaches Γ₀
--- nor plugs `Fidelity.AtHeight`.  bi-`≤′` (not `≡`) throughout, because
+-- nor plugs `Fidelity.carrier-height`.  bi-`≤′` (not `≡`) throughout, because
 -- Brouwer `olim`s of different ℕ-indexings of one supremum are not
 -- definitionally equal.
 

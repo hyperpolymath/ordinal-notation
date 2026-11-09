@@ -4,8 +4,8 @@
 #
 # check-agda-trusted-base.sh — pin the Agda trusted base to exactly what is
 # declared. The only postulates allowed are the two open order-type fidelity
-# axioms in Ordinal/Buchholz/Fidelity.agda (`denotation`,
-# `ordinal-upper-bound`; see Fidelity-OPEN-postulates.adoc). That file is the
+# axioms in Ordinal/Buchholz/Fidelity.agda (`carrier-height`,
+# `denotation`; see Fidelity-OPEN-postulates.adoc). That file is the
 # one entry for proof code in .cicd-hygiene-allow, and this check is the
 # exact-count enforcement that entry requires: a third postulate block, a
 # postulate anywhere else, or an escape pragma fails it.
@@ -16,7 +16,7 @@ set -euo pipefail
 ROOT="${1:-verification/proofs/agda}"
 ALLOWED="$ROOT/Ordinal/Buchholz/Fidelity.agda"
 EXPECTED_BLOCKS=2
-EXPECTED_NAMES="denotation ordinal-upper-bound"
+EXPECTED_NAMES="carrier-height denotation"
 
 [ -d "$ROOT" ] || { echo "check-agda-trusted-base: no Agda root at $ROOT" >&2; exit 2; }
 [ -f "$ALLOWED" ] || { echo "check-agda-trusted-base: $ALLOWED is missing" >&2; exit 2; }

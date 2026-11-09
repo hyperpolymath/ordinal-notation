@@ -12,7 +12,7 @@ build/container/entrypoint.sh
 tests/e2e.sh
 #
 # Proof code. The one sanctioned postulate-bearing module: the two OPEN
-# order-type fidelity axioms (`denotation`, `ordinal-upper-bound`; see
+# order-type fidelity axioms (`carrier-height`, `denotation`; see
 # verification/proofs/agda/Fidelity-OPEN-postulates.adoc). It is quarantined
 # in verification/proofs/agda/MANIFEST (must keep failing --safe) and the exact
 # count is enforced by scripts/check-agda-trusted-base.sh in the proven suite.

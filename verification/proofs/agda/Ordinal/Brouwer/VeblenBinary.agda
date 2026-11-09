@@ -60,7 +60,7 @@
 -- ψ₀(Ω_ω) sits FAR above Γ₀ and additionally needs the ordinal-collapsing
 -- layer; order-type fidelity (ψ₀(Ω_ω)) therefore REMAINS OPEN
 -- (D-2026-06-14).  This slice neither characterises Γ₀ as least nor plugs
--- `Fidelity.AtHeight`, and closes NO postulate.  bi-`≤′` (not `≡`) is used
+-- `Fidelity.carrier-height`, and closes NO postulate.  bi-`≤′` (not `≡`) is used
 -- for fixed-point facts (Brouwer `olim`s of different ℕ-indexings of one
 -- supremum are not definitionally equal).
 

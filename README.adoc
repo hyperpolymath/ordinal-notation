@@ -47,12 +47,12 @@ link:verification/proofs/agda/Fidelity-OPEN-postulates.adoc[Fidelity-OPEN-postul
 === The two postulates
 
 `verification/proofs/agda/Ordinal/Buchholz/Fidelity.agda` declares two
-postulates, `denotation` and `ordinal-upper-bound`. It is the only file here
-that is not `--safe`. A 2026-11-09 audit found that the two postulates are
-jointly inconsistent and that the order they are stated over leaves out the
-ψ₀ fragment, so the specification must be restated before anyone tries to
-discharge it; see
-link:verification/proofs/agda/Fidelity-OPEN-postulates.adoc[the warning there]. It is *left out* of `All.agda` and is recorded as
+postulates, `carrier-height` and `denotation`. It is the only file here
+that is not `--safe`. A 2026-11-09 audit found the earlier specification
+jointly inconsistent; it was restated the same day as the order type of the
+sound carrier (`WfAdm` terms under `_<ᵇ²_`). That carrier omits the ψ₀
+fragment, so this is not yet the ψ₀(Ω_ω) claim; see
+link:verification/proofs/agda/Fidelity-OPEN-postulates.adoc[the notes there]. It is *left out* of `All.agda` and is recorded as
 `quarantine` in `verification/proofs/agda/MANIFEST`, so nothing verified
 depends on it.
 

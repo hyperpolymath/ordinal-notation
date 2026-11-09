@@ -40,7 +40,7 @@
 -- its diagonal → Γ₀.  It does NOT reach Γ₀, and ψ₀(Ω_ω) sits far above
 -- even Γ₀ and additionally needs the ordinal-collapsing layer.  Order-type
 -- fidelity (ψ₀(Ω_ω)) REMAINS OPEN (D-2026-06-14); this slice neither
--- reaches Γ₀ nor plugs `Fidelity.AtHeight`.  bi-`≤′` (not `≡`) is used for
+-- reaches Γ₀ nor plugs `Fidelity.carrier-height`.  bi-`≤′` (not `≡`) is used for
 -- the fixed-point facts because Brouwer `olim`s of different ℕ-indexings of
 -- one supremum are not definitionally equal; the monotonicity results are
 -- single-`≤′` / single-`<′` and exact.
