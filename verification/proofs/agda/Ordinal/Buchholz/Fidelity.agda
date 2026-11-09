@@ -31,7 +31,12 @@
 --     `_<ᵇ²_` exists, and `_<′_` is transitive, so reflecting into
 --     `_<ᵇ²_` itself could force a transitivity that may be false),
 --   * is strictly bounded by the height, and
---   * is cofinal BELOW the height.
+--   * is cofinal BELOW the height in the non-strict sense: every `o`
+--     below the height is not above some denotation, `¬ (⟦ t ⟧ <𝒪 o)`.
+--     Strict cofinality (`o <𝒪 ⟦ t ⟧`) is unsatisfiable: the carrier has
+--     a maximum (`bOmega ω` has no outgoing `_<ᵇ²_` edge), and strict
+--     cofinality at its own denotation plus `reflect` would demand an edge
+--     out of it.  (Corrected 2026-11-09, review on ordinal-notation#6.)
 --
 -- The height is a single postulated `Ord`, not a parameter, so the
 -- postulates assert ONE existence claim instead of one per candidate.
@@ -59,6 +64,7 @@ module Ordinal.Buchholz.Fidelity where
 
 open import Data.Unit using (⊤; tt)
 open import Data.Product using (Σ; _,_; _×_)
+open import Relation.Nullary using (¬_)
 open import Relation.Binary.Construct.Closure.Transitive using (TransClosure)
 
 open import Ordinal.OmegaMarkers using (OmegaIndex; fin; ω; _≤Ω_; fin≤ω; ω≤ω)
@@ -82,7 +88,7 @@ record DenotesBelow (N : BHNotation) : Set where
                TransClosure _<ᵇ²_ s t
     bounded  : ∀ {t} → WfAdm t → ⟦ t ⟧ <𝒪 bh-height
     cofinal  : ∀ {o} → o <𝒪 bh-height →
-               Σ BT (λ t → WfAdm t × (o <𝒪 ⟦ t ⟧))
+               Σ BT (λ t → WfAdm t × ¬ (⟦ t ⟧ <𝒪 o))
 
 ----------------------------------------------------------------------
 -- 2. Proved for real: the grammar-level marker bound

@@ -23,8 +23,12 @@ denotation `+⟦_⟧ : BT → Ord+` into the real Brouwer order
   so reflecting into `+_<ᵇ²_+` itself could force a transitivity that may be
   false;
 * is *strictly bounded* by the height (`+WfAdm t → ⟦t⟧ <′ carrier-height+`);
-* is *cofinal below* the height
-  (`+o <′ carrier-height → Σ t, WfAdm t × o <′ ⟦t⟧+`).
+* is *cofinal below* the height in the non-strict sense
+  (`+o <′ carrier-height → Σ t, WfAdm t × ¬ (⟦t⟧ <′ o)+`). Strict
+  cofinality is unsatisfiable: `+bOmega ω+` is admissible and has no outgoing
+  `+_<ᵇ²_+` edge, so the carrier has a maximum, and strict cofinality at its
+  own denotation plus `+reflect+` would demand an edge out of it. (Corrected
+  2026-11-09 after review on ordinal-notation#6.)
 
 That is "the sound carrier has order type `+carrier-height+`", up to the
 transitive closure. Proved for real alongside it: `+markers-≤ω+`, every
