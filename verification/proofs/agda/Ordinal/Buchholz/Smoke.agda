@@ -755,10 +755,10 @@ open import Ordinal.Buchholz.RankMonoUnionWfCNF using
 -- `bh-notation-from` builds a genuine instance from the Brouwer order
 -- (Ord / _<′_ / wf-<′), discharging the target order AND its
 -- well-foundedness FOR REAL inside the --safe kernel. The candidate BH
--- height is the only remaining free input — an explicit parameter to
--- `Fidelity.AtHeight` (quarantined outside the --safe cone). This
--- reduces the Fidelity trust boundary from three postulates to two
--- (denotation, ordinal-upper-bound). See Fidelity-OPEN-postulates.md +
+-- height is the only remaining free input — since 2026-11-09 the
+-- postulate `Fidelity.carrier-height` (quarantined outside the --safe
+-- cone). The Fidelity trust boundary is two postulates
+-- (carrier-height, denotation). See Fidelity-OPEN-postulates.adoc +
 -- docs/proof-debt.md (d).
 open import Ordinal.Buchholz.BHTarget using
   ( BHNotation

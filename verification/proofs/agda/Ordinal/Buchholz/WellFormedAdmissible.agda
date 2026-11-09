@@ -18,7 +18,9 @@
 --
 -- * `WfAdm : BT → Set` — the predicate.
 -- * `wfAdm-to-wfCNF` — every admissible term is also WfCNF.
--- * `BH-wf-adm` — the Bachmann–Howard marker is admissible.
+-- * (`BH-wf-adm` was planned here but is not defined, and cannot be:
+--   `BH = bpsi Omega0 (bOmega Omegaω)` needs rank-pow (bOmega Omegaω) = ω^ω
+--   below ω-rank-pow Omega0 = ω^1, which fails.  Audit note 2026-11-09.)
 --
 -- ## What does NOT ship here (deferred to a follow-on slice)
 --
@@ -48,7 +50,7 @@
 --   * `wf-adm-bpsi`         -- constructor (carries the rank bound)
 --   * `wf-adm-bplus`        -- constructor
 --   * `wfAdm-to-wfCNF`      -- projection to WfCNF
---   * `BH-wf-adm`           -- sanity: Bachmann–Howard marker
+--   * (no `BH-wf-adm`: BH is not admissible; see above)
 
 module Ordinal.Buchholz.WellFormedAdmissible where
 
