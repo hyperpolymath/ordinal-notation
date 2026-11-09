@@ -104,10 +104,10 @@ jobs:
           set -euo pipefail
           tc="$RUNNER_TEMP/agda"
           mkdir -p "$tc"
-          curl --fail --location --retry 3 -o "$tc/agda.tar.xz" \
+          curl --proto '=https' --proto-redir '=https' --fail --location --retry 3 -o "$tc/agda.tar.xz" \
             "https://github.com/agda/agda/releases/download/v$AGDA_VERSION/Agda-v$AGDA_VERSION-linux.tar.xz"
           echo "$AGDA_SHA256  $tc/agda.tar.xz" | sha256sum --check
-          curl --fail --location --retry 3 -o "$tc/stdlib.tar.gz" \
+          curl --proto '=https' --proto-redir '=https' --fail --location --retry 3 -o "$tc/stdlib.tar.gz" \
             "https://github.com/agda/agda-stdlib/archive/refs/tags/v$STDLIB_VERSION.tar.gz"
           observed=$(sha256sum "$tc/stdlib.tar.gz" | cut -d' ' -f1)
           if [ -z "$STDLIB_SHA256" ]; then
