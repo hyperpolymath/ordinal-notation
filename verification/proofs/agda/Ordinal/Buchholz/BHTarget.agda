@@ -25,10 +25,10 @@
 -- four obligations FOR REAL inside the --safe kernel: the target order
 -- and its well-foundedness are now the genuine Brouwer `_<′_` / `wf-<′`,
 -- not assumptions. Only the distinguished `bh-height` (i.e. WHICH `Ord`
--- value is ψ₀(Ω_ω)) remains a free input — handed to `Fidelity` as an
--- explicit module parameter, with its ψ₀(Ω_ω)-meaning pinned downstream
--- by the (still-open) `denotation.pins-BH` field, not by fiat. See
--- Fidelity-OPEN-postulates.md.
+-- value is ψ₀(Ω_ω)) remains a free input — supplied in `Fidelity` by the
+-- postulate `carrier-height` (since 2026-11-09; earlier a module
+-- parameter pinned by a `pins-BH` field). See
+-- Fidelity-OPEN-postulates.adoc.
 --
 -- ## What this module is NOT
 --

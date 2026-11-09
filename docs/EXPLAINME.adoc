@@ -96,11 +96,12 @@ Claim (OPEN):: The Buchholz order on `WfBT` has order type ψ₀(Ω_ω).
 `Buchholz/Fidelity.agda` states this theorem in a typed form. It assumes two
 postulates:
 
-* `denotation`, an order-preserving embedding into the target notation;
-* `ordinal-upper-bound`, a bound on its image.
+* `carrier-height`, the height of the sound carrier in `Ord`;
+* `denotation`, a preserving, reflecting (to transitive closure), bounded and
+  cofinal-below map from `WfAdm` terms into the Brouwer order at that height.
 
-The candidate height is a module parameter (`Fidelity.AtHeight`), not an
-axiom. The file is not `--safe`. It is left out of `All.agda` and is recorded
+The sound carrier omits the ψ₀ fragment, so this is the carrier's order type,
+not yet ψ₀(Ω_ω). (Restated 2026-11-09; the earlier version was inconsistent.) The file is not `--safe`. It is left out of `All.agda` and is recorded
 as `quarantine` in the MANIFEST, and the gate checks that it still fails
 `--safe`.
 
@@ -115,8 +116,10 @@ and `docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc`.
 * `just proof-check-agda` runs `scripts/check-proofs.sh agda`. It compiles each
   gated module with `--safe`, confirms that the quarantined module still fails,
   and fails if any `.agda` file is missing from the MANIFEST.
-* `Buchholz/Smoke.agda` pins the headline names, so a renamed theorem breaks
-  the build.
+* `Buchholz/Smoke.agda` pins the Buchholz headline names, so renaming one of
+  them breaks the build. The Brouwer and Veblen headlines are not pinned yet.
+* The quarantine check passes whenever `Fidelity.agda` fails `--safe`, for any
+  reason. Nothing checks that it still type-checks without `--safe`.
 
 There is no CI workflow for the proofs yet. Until one exists, these checks run
 locally.

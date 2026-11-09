@@ -3,6 +3,19 @@
 :date: 2026-05-20
 :toc:
 
+[NOTE]
+.Stale copy (audit note 2026-11-09)
+====
+This copy predates the doubled-ladder close-out: it still reports "9/13"
+and does not describe `rank2` or `_<ᵇ²_`. A later revision, reporting 12/13, survives as the
+frozen historical copy in hyperpolymath/echo-types
+(`docs/echo-types/buchholz-rank-obstruction.adoc`). This repository is the
+maintained home of the lane; this file has not yet been brought up to that
+revision. Note also that
+`Order.agda`'s `_<ᵇ_` has 12 constructors; the "13" counts include
+`<ᵇ-ψα`, which is not a constructor there.
+====
+
 This note records why the natural rank-embedding route to unbudgeted
 `WellFounded _<ᵇʳᶠ_` (and to `WellFounded _<ᵇ⁺_`) is *structurally
 impossible* for the `Ordinal.Buchholz.Order._<ᵇ_` relation as

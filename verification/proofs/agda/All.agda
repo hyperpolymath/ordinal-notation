@@ -6,7 +6,7 @@
 -- below typechecks under --safe --without-K with zero postulates.
 --
 -- NOT included, on purpose: Ordinal/Buchholz/Fidelity.agda. It carries the two
--- quarantined postulates (`denotation`, `ordinal-upper-bound`), so it cannot be
+-- quarantined postulates (`carrier-height`, `denotation`), so it cannot be
 -- --safe. See Fidelity-OPEN-postulates.adoc.
 
 module All where

@@ -19,9 +19,9 @@
 --
 -- ε₀ is the first named milestone above the existing `ω^_` /
 -- `ω-rank-pow` arithmetic, and it is ENORMOUSLY below ψ₀(Ω_ω): the
--- fidelity height `bh-height = ψ₀(Ω_ω)` (the `Fidelity.AtHeight`
--- parameter) sits far above ε₀ ≪ Γ₀ ≪ … ≪ ψ₀(Ω_ω). This module does
--- NOT plug that parameter. It builds the ordinal-exponentiation
+-- fidelity height `bh-height = ψ₀(Ω_ω)` (now the `Fidelity.carrier-height`
+-- postulate) sits far above ε₀ ≪ Γ₀ ≪ … ≪ ψ₀(Ω_ω). This module does
+-- NOT supply it. It builds the ordinal-exponentiation
 -- primitive every higher rung needs and pins ε₀ as the first checkable
 -- value. (ε₀ is itself the collapse ψ₀(Ω₁) — the first nontrivial data
 -- point the eventual `denotation` ⟦·⟧ must reproduce.)
