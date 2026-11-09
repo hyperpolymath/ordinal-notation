@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K #-}
 
--- hypatia: allow code_safety/agda_postulate -- order-type fidelity for the Buchholz notation (D-2026-06-14) is external mathematics; the TWO named postulates below (denotation, ordinal-upper-bound) are the explicit, documented trust boundary. The former third postulate (the whole BH structure) is now CONSTRUCTED for real in the --safe module Ordinal.Buchholz.BHTarget; only the candidate BH height remains, as an explicit module parameter (AtHeight). This module is OUTSIDE the --safe kernel cone by design, is NOT imported by All.agda/Smoke.agda, and asserts NOTHING that the --safe core depends on. See Fidelity-OPEN-postulates.md.
+-- hypatia: allow code_safety/agda_postulate -- order-type fidelity for the Buchholz notation (D-2026-06-14) is external mathematics; the TWO named postulates below (denotation, ordinal-upper-bound) are the explicit, documented trust boundary. The former third postulate (the whole BH structure) is now CONSTRUCTED for real in the --safe module Ordinal.Buchholz.BHTarget; only the candidate BH height remains, as an explicit module parameter (AtHeight). This module is OUTSIDE the --safe kernel cone by design, is NOT imported by All.agda/Smoke.agda, and asserts NOTHING that the --safe core depends on. See Fidelity-OPEN-postulates.adoc.
 
 -- SPDX-License-Identifier: MPL-2.0
 -- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
@@ -85,7 +85,7 @@
 -- now constructed in BHTarget.agda; the candidate height is the
 -- `AtHeight` parameter.)
 --
--- See Fidelity-OPEN-postulates.md for each postulate's owner + what
+-- See Fidelity-OPEN-postulates.adoc for each postulate's owner + what
 -- external mathematics discharges it.
 
 module Ordinal.Buchholz.Fidelity where
@@ -121,6 +121,12 @@ open import Ordinal.Buchholz.BHTarget using (BHNotation; bh-notation-from)
 -- object `rank2` is NOT (rank2 collapses heights). Stated as a record of
 -- named fields over an arbitrary `BHNotation N`; its inhabitant is
 -- postulated (per height) inside `AtHeight` below, not built.
+--
+-- Audit note (2026-11-09): `cofinal` below, instantiated at `bh-height`,
+-- contradicts the `ordinal-upper-bound` postulate in `AtHeight`, so the two
+-- postulates together derive ⊥, and `cofinal` into all of `Ord` is
+-- unsatisfiable on its own.  The spec needs restating before it can be
+-- discharged; see the warning in Fidelity-OPEN-postulates.adoc.
 record DenotesBH (N : BHNotation) : Set where
   open BHNotation N
   field
@@ -179,7 +185,7 @@ module AtHeight (bh-height-ord : Ord) where
   -- TRUST BOUNDARY #1 (of 2). The faithful, height-preserving denotation
   -- into the (real) Brouwer order is the missing object. This postulate
   -- assumes it exists; this module makes its absence typed, not filled.
-  -- AXIOM: denotation — assumed; OPEN proof-debt for order-type fidelity (D-2026-06-14); see docs/proof-debt.md (d) + Fidelity-OPEN-postulates.md. NOT a permanently accepted axiom — a hole to be discharged.
+  -- AXIOM: denotation — assumed; OPEN proof-debt for order-type fidelity (D-2026-06-14); see Fidelity-OPEN-postulates.adoc. NOT a permanently accepted axiom — a hole to be discharged.
   postulate
     denotation : DenotesBH bh-notation
 
@@ -207,7 +213,7 @@ module AtHeight (bh-height-ord : Ord) where
   -- (`markers-≤ω`, §3) is proved for real; the step from that shadow to
   -- this ⟦·⟧-level bound is the height calculation through a real `⟦·⟧`,
   -- available once `denotation` is discharged.
-  -- AXIOM: ordinal-upper-bound — assumed; OPEN proof-debt for order-type fidelity (D-2026-06-14); see docs/proof-debt.md (d) + Fidelity-OPEN-postulates.md. NOT a permanently accepted axiom — a hole to be discharged.
+  -- AXIOM: ordinal-upper-bound — assumed; OPEN proof-debt for order-type fidelity (D-2026-06-14); see Fidelity-OPEN-postulates.adoc. NOT a permanently accepted axiom — a hole to be discharged.
   postulate
     ordinal-upper-bound : ∀ {t} → WfBT t → ¬ (bh-height <𝒪 ⟦ t ⟧)
 

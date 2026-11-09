@@ -4,6 +4,36 @@ Companion to `+verification/proofs/agda/Ordinal/Buchholz/Fidelity.agda+`. Open
 problem *`+D-2026-06-14+`*
 (`+docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc+`).
 
+[WARNING]
+.Design audit (2026-11-09): the fidelity specification is not satisfiable as stated
+====
+The two postulates cannot both hold, so they can never be discharged as
+written:
+
+* `denotation` includes `cofinal : (o : 𝒪) → Σ BT (λ t → WfBT t × (o <𝒪 ⟦ t ⟧))`.
+  Taking `o := bh-height` gives a well-formed `t` with `bh-height <𝒪 ⟦ t ⟧`,
+  which `ordinal-upper-bound` refutes. Inside `AtHeight` the two postulates
+  derive `⊥`. Cofinality into *all* of Brouwer `Ord` is also unsatisfiable on
+  its own: `BT` is countable, and the `olim` of an enumeration of its image
+  bounds it.
+* `ordinal-upper-bound` ranges over *every* `WfBT` term, including
+  `bOmega (fin 1)` and `bOmega ω`, which any faithful denotation sends above
+  ψ₀(Ω_ω). The step "markers ≤ ω ⇒ denotation ≤ ψ₀(Ω_ω)" in the table
+  below is therefore false as mathematics, not merely open.
+* The statement is posed over `_<ᵇ²_`, which has no constructor relating two
+  ψ terms at the same index (`<ᵇ²-ψΩ` needs `μ <Ω ν` strictly), and whose
+  ψ-headed sources must satisfy `WfAdm` (`rank-pow α <′ ω-rank-pow ν`). `BH`
+  itself fails that bound (ω^ω against ω^1). So `_<ᵇ²_` leaves out the
+  ψ₀ fragment the fidelity claim is about. `wf-<ᵇ²` is still a genuine
+  theorem; it is just the wrong carrier for fidelity.
+
+A correct restatement needs cofinality *below* the height
+(`∀ o → o <𝒪 bh-height → …`), an upper bound over the terms below `BH`
+(or over the ψ₀-image) rather than all of `WfBT`, and a carrier that orders
+same-index ψ terms, such as `_<ᵇʳᶠ²_` (which has `ψα`). Until then the
+fidelity claim stays OPEN, and the spec itself is recorded as defective.
+====
+
 === Plain-language summary
 
 *What is now mechanised.* Only the _shape_ of the order-type fidelity
@@ -39,7 +69,7 @@ the missing _objects_, not missing _plumbing_.
 
 *Explicit non-claim.* _Nothing in this module asserts that order type
 ψ₀(Ω_ω) is proven._ `+fidelity+` is only as strong as the three
-postulates below; with them open, it asserts the *shape* of fidelity,
+postulates below (two, since 2026-06-15); with them open, it asserts the *shape* of fidelity,
 not fidelity. `+rank2+` (the height-collapsing termination measure) is
 *not* reused, extended, or tightened toward this claim — fidelity needs
 the separate, height-preserving `+⟦·⟧+`. The status surfaces (appendix,
@@ -75,9 +105,10 @@ and prove the four fields. This is the core order-type-correctness work
 ⟦·⟧-level upper half of the sandwich). |Cheap _given_ postulate #1:
 combine the real `+markers-≤ω+` (every marker `+≤Ω ω+`) with a height
 calculation through the real `+⟦·⟧+` (markers `+≤ ω+` ⇒ denotation
-`+≤ ψ₀(Ω_ω)+`). It is postulated only because it quantifies over the
-not-yet-real `+⟦·⟧+`; it is *not* independent external mathematics
-beyond #1. |Discharged alongside / just after #1 (in-repo, once `+⟦·⟧+`
+`+≤ ψ₀(Ω_ω)+`). *2026-11-09: this step is false as stated* (see the
+warning above): the bound must range over terms below `BH`, not all of
+`WfBT`. It is postulated only because it quantifies over the
+not-yet-real `+⟦·⟧+`. |Discharged alongside / just after #1 (in-repo, once `+⟦·⟧+`
 is real).
 |===
 

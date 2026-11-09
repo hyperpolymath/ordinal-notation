@@ -32,9 +32,11 @@ it stood. Nothing here is claimed beyond what the proofs state.
 `WfBT` has order type ψ₀(Ω_ω). What is verified:
 
 * well-foundedness of the Buchholz orders;
-* a Veblen ladder up to a defined Γ₀, in which every level is a normal
-  function and the fixed-point engine gives the least fixed point and is
-  monotone in its function;
+* a Veblen ladder up to a defined Γ₀, in which every level of the binary φ
+  is monotone, inflationary and continuous (strict monotonicity, and so
+  normality in the strict sense, is proved for φ₁ only), and the
+  fixed-point engine gives the least fixed point and is monotone in its
+  function;
 * one direction of Γ₀'s fixed-point property (`Γ₀-prefixed`).
 
 The reverse direction is reduced to an explicit closure obligation
@@ -46,7 +48,11 @@ link:verification/proofs/agda/Fidelity-OPEN-postulates.adoc[Fidelity-OPEN-postul
 
 `verification/proofs/agda/Ordinal/Buchholz/Fidelity.agda` declares two
 postulates, `denotation` and `ordinal-upper-bound`. It is the only file here
-that is not `--safe`. It is *left out* of `All.agda` and is recorded as
+that is not `--safe`. A 2026-11-09 audit found that the two postulates are
+jointly inconsistent and that the order they are stated over leaves out the
+ψ₀ fragment, so the specification must be restated before anyone tries to
+discharge it; see
+link:verification/proofs/agda/Fidelity-OPEN-postulates.adoc[the warning there]. It is *left out* of `All.agda` and is recorded as
 `quarantine` in `verification/proofs/agda/MANIFEST`, so nothing verified
 depends on it.
 
@@ -95,8 +101,12 @@ modules, plus `Fidelity.agda`, which must keep failing `--safe`.
 just proof-check-agda
 ----
 
-`verification/proofs/agda/Ordinal/Buchholz/Smoke.agda` pins the headline
-theorems.
+`verification/proofs/agda/Ordinal/Buchholz/Smoke.agda` pins the Buchholz
+headline theorems. The Brouwer and Veblen headlines (`ε₀-ε-number`,
+`φ₁-ε-number`, `next-ε-least`, `nextFix-least`, `Γ₀-prefixed`,
+`Γ₀-fixed-from-closure`, `nextFix-mono-in-g`) are checked through
+`All.agda` but not yet pinned. There is no CI job for the proofs yet; see
+link:docs/status/PROOF-STATUS.adoc[docs/status/PROOF-STATUS.adoc].
 
 == Relation to echo-types
 

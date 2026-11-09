@@ -1,101 +1,135 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// Template: rsr-template-repo/docs/status/PROOF-STATUS.adoc
-// Tracks proof completion. Requirements defined in PROOF-NEEDS.adoc
-= Proof Status — ORDINAL_NOTATION
+= Proof Status — ordinal-notation
+:toc:
 
-== Summary
+This is the claims ledger for the Agda development under
+`verification/proofs/agda/`. It replaces the RSR template placeholder that
+stood here until 2026-11-09. Status tokens are the closed vocabulary of
+standards PROOF-POLICY §5 (`proven`, `proven-with-postulates`, `tested-only`,
+`argued`, `open`). Grades are Proof Witness Grades (PROOF-POLICY §8).
 
-[cols="2,1,1,1,1,1", options="header"]
+link:../EXPLAINME.adoc[EXPLAINME] maps each claim to its module in more
+detail. This repository is a frozen hand-off record (decision D-2026-06-21);
+nothing here is an active climb.
+
+== Grade census
+
+76 gated modules, 1 quarantined. Every theorem is `ungraded`: no PWG-3
+receipt (Agda version, standard-library pin, flags in force under
+`agda --safe --without-K --cubical-compatible`, import cone, commit) is
+recorded, and no Rocq or Lean leg exists. PWG-3 0, PWG-2i 0, PWG-2ii 0,
+PWG-1 0, `ungraded`: all.
+
+Local check, not a receipt: on 2026-11-09 `All.agda` at `53ff625` compiled
+cold under `agda --safe --without-K --cubical-compatible` with Agda 2.6.3
+and agda-stdlib 2.3, and `scripts/check-agda-trusted-base.sh` passed.
+
+== Claims
+
+[cols="3,3,1",options="header"]
 |===
-| Category | Total | Done | In Progress | Blocked | Remaining
+| Claim | Carried by | Status
 
-| ABI/FFI (ABI) | 5 | 0 | 0 | 0 | 5
-| Typing (TP) | 2 | 0 | 0 | 0 | 2
-| Invariant (INV) | 0 | 0 | 0 | 0 | 0
-| Security (SEC) | 0 | 0 | 0 | 0 | 0
-| Concurrency (CONC) | 0 | 0 | 0 | 0 | 0
-| Algorithm (ALG) | 0 | 0 | 0 | 0 | 0
-| Domain (DOM) | 0 | 0 | 0 | 0 | 0
-| *Total* | *7* | *0* | *0* | *0* | *7*
+| Brouwer ordinals carry a well-founded strict order
+| `wf-<′`, `Brouwer/Phase13.agda`
+| `proven`
+
+| `ω^^` (ordinal exponent, limit exponents included); `ε₀` is an ε-number (both `≤′` directions); `ω^^` is inflationary
+| `ε₀-ε-number`, `ω^^-infl`, `Brouwer/OrdinalExp.agda`
+| `proven`
+
+| Every φ₁ value is an ε-number; `next-ε β` is the least ε-number above β; φ₁ strictly monotone
+| `φ₁-ε-number`, `next-ε-least`, `φ₁-strict-mono`, `Brouwer/VeblenPhi*.agda`
+| `proven`
+
+| Binary φ: every level is monotone, inflationary and continuous; Veblen recurrence
+| `φ-mono₂`, `φ-infl`, `φ-cont`, `φ-level-fixed-≤`, `Brouwer/VeblenBinary*.agda`
+| `proven`. Strict monotonicity of the binary levels is *not* proved, so "normal function" holds only in the weak sense.
+
+| Fixed-point engine: least fixed point; monotone in its function
+| `nextFix-least`, `nextFix-mono-in-g`, `deriv-mono-in-g`
+| `proven`
+
+| `Γ₀ ≤′ φ_Γ₀(0)`
+| `Γ₀-prefixed`, `Brouwer/VeblenBinaryMono.agda`
+| `proven`. This is the direction that holds for every α; the Γ₀-specific content is the converse, below.
+
+| `φ_Γ₀(0) ≤′ Γ₀` (Γ₀ is the least diagonal fixed point)
+| reduced to a closure obligation by `Γ₀-fixed-from-closure`
+| `open`
+
+| `_<ᵇ_` (admitted core) is well-founded
+| `wf-<ᵇ`, `Buchholz/WellFounded.agda` (structural, no rank)
+| `proven`
+
+| `_<ᵇ²_` is ordinally sound and well-founded
+| `rank2-mono-<ᵇ²`, `wf-<ᵇ²`, `Buchholz/RankDoubledLadderUmbrella.agda`
+| `proven`. Scope: `_<ᵇ²_` has no same-index ψ comparison and needs `WfAdm` on ψ sources, which `BH` fails, so it omits the ψ₀ fragment.
+
+| Recursive surface order on the sound carrier is well-founded, unbudgeted
+| `wf-<ᵇʳᶠ²`, `Buchholz/RecursiveSurfaceSound.agda`
+| `proven`
+
+| Budgeted recursive surface order is well-founded
+| `wf-<ᵇʳᶠᵇ`, `Buchholz/RecursiveSurfaceBudget.agda`
+| `proven`
+
+| Unbudgeted global WF of the recursive surface order over native `_<ᵇ_`
+| routes recorded as walled in `docs/bridges/buchholz-rank-obstruction.adoc`
+| `open`
+
+| `OrderExtended._<ᵇ⁺_` is well-founded
+| not mechanised
+| `open`. 2026-11-09 observation (not checked): it looks like a subrelation of `ExtendedOrder._<ᵇ⁺_`, whose `wf-<ᵇ⁺` is proved. The two modules use the same name for different relations.
+
+| Target notation from the Brouwer order
+| `bh-notation-from`, `Buchholz/BHTarget.agda` (fixes the order only)
+| `proven`
+
+| CNF trichotomy; staged closure monotone; pedagogical ψ least
+| `cnf-trichotomy`, `C-monotone`, `psi-least`
+| `proven`
+
+| Checked refutations of two tempting lemmas
+| `Brouwer/StrictLeftMonoRefuted.agda`, `Brouwer/AdditivePrincipalGenericRefuted.agda`
+| `proven` (as refutations)
+
+| Order type of the Buchholz order is ψ₀(Ω_ω)
+| `Buchholz/Fidelity.agda` (quarantined, two postulates)
+| `open`. The 2026-11-09 audit found the specification itself defective: the two postulates are jointly inconsistent, and the order it is stated over omits the ψ₀ fragment. See the warning in `verification/proofs/agda/Fidelity-OPEN-postulates.adoc`.
 |===
 
-*Overall*: 0% proven
+== Trusted base
 
-== Proofs Done
+* The only postulates are `denotation` and `ordinal-upper-bound` in
+  `Buchholz/Fidelity.agda`. That file is not `--safe`, is not imported by any
+  module, and is `quarantine` in the MANIFEST.
+* `scripts/check-agda-trusted-base.sh` pins exactly those two postulates and
+  rejects escape pragmas. Its postulate pattern is anchored at line start,
+  and its escape list omits `NON_COVERING`, `--type-in-type`,
+  `--allow-unsolved-metas` and `--no-termination-check`; `--safe` covers the
+  gated files regardless.
 
-// Format:
-// | ID | Proof | Prover | File | Date | Verified By |
-// | ABI-1 | Non-null pointer proofs | Idris2 | verification/proofs/idris2/ABI/Pointers.idr | 2026-XX-XX | idris2 --check |
+== Known gaps (2026-11-09)
 
-[cols="1,3,1,3,1,2", options="header"]
-|===
-| ID | Proof | Prover | File | Date | Verified By
+* No CI job runs Agda. The checks run locally.
+* `scripts/check-proofs.sh agda` uses `agda --safe`, not the PROOF-POLICY §2.1
+  invocation `agda --safe --without-K --cubical-compatible`. Every gated file
+  declares `--safe --without-K` in its own header.
+* The quarantine check passes if `Fidelity.agda` fails `--safe` for any
+  reason; it does not check that the file still type-checks without
+  `--safe`.
+* The Brouwer and Veblen headline names are not pinned in a Smoke module.
+* Files do not yet declare the estate strict flag set (`--cubical-compatible
+  --exact-split --no-sized-types --no-guardedness`); the code is compatible
+  with it (#2).
 
-| — | No proofs completed yet | — | — | — | —
-|===
+== Verification commands
 
-== Proofs In Progress
-
-[cols="1,3,1,2,1,2", options="header"]
-|===
-| ID | Proof | Prover | Assignee | Started | Blocker
-
-| — | — | — | — | — | —
-|===
-
-== Proofs Blocked
-
-[cols="1,3,2,3", options="header"]
-|===
-| ID | Proof | Blocked By | Notes
-
-| — | — | — | —
-|===
-
-== Proofs Remaining
-
-[cols="1,3,1,1,1,1", options="header"]
-|===
-| ID | Proof | Category | Prover | Priority | Est. Effort
-
-| ABI-1 | Non-null pointer proofs | ABI | Idris2 | P1 | 2h
-| ABI-2 | Memory layout correctness | ABI | Idris2 | P1 | 4h
-| ABI-3 | Platform type size proofs | ABI | Idris2 | P1 | 2h
-| ABI-4 | FFI function return type proofs | ABI | Idris2 | P1 | 2h
-| ABI-5 | C ABI compliance | ABI | Idris2 | P1 | 4h
-| TP-1 | Core data type well-formedness | TP | Idris2 | P1 | 4h
-| TP-2 | Public API type safety | TP | Lean4 | P2 | 4h
-|===
-
-== Verification Commands
-
-[source,bash]
+[source,sh]
 ----
-# Check all Idris2 proofs
-just proof-check-idris2
-
-# Check all Lean4 proofs
-just proof-check-lean4
-
-# Check all Agda proofs
+agda verification/proofs/agda/All.agda
 just proof-check-agda
-
-# Check all Coq proofs
-just proof-check-coq
-
-# Run all proof checks
-just proof-check-all
-
-# Scan for dangerous patterns
-panic-attack assail --proofs-only
+bash scripts/check-agda-trusted-base.sh
 ----
-
-== Changelog
-
-[cols="1,3,1", options="header"]
-|===
-| Date | Change | By
-
-| 2026-04-04 | Initial proof status tracking | Template
-|===

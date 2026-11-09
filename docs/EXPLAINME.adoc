@@ -115,8 +115,10 @@ and `docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc`.
 * `just proof-check-agda` runs `scripts/check-proofs.sh agda`. It compiles each
   gated module with `--safe`, confirms that the quarantined module still fails,
   and fails if any `.agda` file is missing from the MANIFEST.
-* `Buchholz/Smoke.agda` pins the headline names, so a renamed theorem breaks
-  the build.
+* `Buchholz/Smoke.agda` pins the Buchholz headline names, so renaming one of
+  them breaks the build. The Brouwer and Veblen headlines are not pinned yet.
+* The quarantine check passes whenever `Fidelity.agda` fails `--safe`, for any
+  reason. Nothing checks that it still type-checks without `--safe`.
 
 There is no CI workflow for the proofs yet. Until one exists, these checks run
 locally.
