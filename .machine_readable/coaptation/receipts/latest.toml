@@ -10,9 +10,9 @@ band = "green"
 proposed-action = "none — the descriptile self-model coapts with the contractile set-point within tolerance."
 
 [coverage]
-clauses-total = 52
+clauses-total = 55
 descriptile-witnessed = 2
-probe-deferred-to-hunt = 26
+probe-deferred-to-hunt = 29
 must-trust-unmeasured-gaps = 0
 note = "Yard sees descriptile evidence only; probe-deferred obligations need a Hunt-tier run for a full hard-gate."
 
@@ -21,7 +21,7 @@ grade = "boolean_gate / boolean_gate_provenance"
 witnessed = 1
 refuted = 0
 unmeasured-gaps = 0
-probe-deferred = 26
+probe-deferred = 29
 gate = "pass"
 
 [reading.adjust]
@@ -53,8 +53,11 @@ intend.formal-verification = "wish:declared"
 intend.ecosystem-visualization = "wish:declared"
 must.license-present = "probe-deferred"
 must.readme-present = "probe-deferred"
+must.spdx-headers = "probe-deferred"
+must.toolchain-matches-language = "probe-deferred"
 must.security-policy = "probe-deferred"
 must.repo-deed = "probe-deferred"
+must.internal-links-resolve = "probe-deferred"
 must.governance-docs = "probe-deferred"
 must.machine-readable-dir = "probe-deferred"
 must.contractiles-complete = "probe-deferred"
@@ -98,5 +101,5 @@ bust.sync-drift-between-repos = "latent"
 bust.contractile-parse-error = "latent"
 
 [provenance]
-contractiles = "intend@a57d8b6e38e2 must@4d91cf24e6c3 trust@5e40863b6071 adjust@27638837484c dust@b482276fa3e7 bust@241e2cdaca39"
-descriptiles = "deed@340573700442 anchor@c091706e31e3"
+contractiles = "intend@cbef858e4438 must@16274c159a7a trust@d695433efdaa adjust@27638837484c dust@b482276fa3e7 bust@241e2cdaca39"
+descriptiles = "deed@2db2ba1168d5 anchor@c091706e31e3"
