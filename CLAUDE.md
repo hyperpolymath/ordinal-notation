@@ -39,7 +39,7 @@ The descriptive family (working name *descriptiles*) describes what-is; the **co
 
 | File | Answers |
 |---|---|
-| `ordinal-notation_chora.deed` | **CHORA**, the repo deed. Its `(identity)` `(clade)` `(lineage)` clauses say what this repo IS (registers into `gv-clade-index`); `(meta)` the architecture axes; `(agentic)` *may I act now?*; `(ecosystem)` where it sits and what it is not; `(status)` and `(maturity)` where it is now. Read fields with `scripts/deed-field.sh`. |
+| `ordinal-notation_chora.deed` | **CHORA**, the repo deed. Its header `:repo-uuid` is the repo's one id, and `(identity)` and `(lineage)` say what this repo IS; a `(clade)` clause, when present, records the repo's clade placements: identity facts about where it sits, never its id and never an edict. chora-registry (formerly `gv-clade-index`) is authoritative for them; this repo's validation checks only that a declared clade is one of the 12 shelves; `(meta)` the architecture axes; `(agentic)` *may I act now?*; `(ecosystem)` where it sits and what it is not; `(status)` and `(maturity)` where it is now. Read fields with `scripts/deed-field.sh`. |
 | `(anchor)` | *Semantic authority + golden path* — what downstream may extend-not-redefine; if a recognised-drift / re-anchor marker is present, it **supersedes** accumulated context — read it first. |
 | `(neurosym)` | *Meaning* of operations — proof obligations. |
 | `(playbook)` | *How* permitted actions run. |
@@ -56,7 +56,7 @@ grammars. Canon: `metadatastician/standards/3-practice/DATA-FORMAT-ROUTING.adoc`
 Planned support is not operational evidence: retain explicit transitional
 checks until a pinned kyq executable passes positive and negative tests.
 
-- `hyperpolymath/standards` — the canon source. · `hyperpolymath/gv-clade-index` — the estate map (identity registry). · `hyperpolymath/manifesto` — this doctrine.
+- `hyperpolymath/standards` — the canon source. · `hyperpolymath/gv-clade-index` (being renamed chora-registry) — the estate registry of repo identities and classification schemes. · `hyperpolymath/manifesto` — this doctrine.
 - **Before you invent, rename, or consolidate anything: STOP and check the map + IS-NOT.**
 
 ## Estate language policy (overridable per-repo via AGENTIC)
@@ -67,16 +67,56 @@ Use plain JavaScript when this tooling is needed. TypeScript and ReScript migrat
 ## Asking the owner
 Put every question that needs the owner's decision through the selector (the AskUserQuestion tool), not as prose at the end of a report. Batch up to four per call, offer concrete options with the recommended one first, and say what each option would cause.
 
+## Proofs — which prover for which obligation
+
+Normative source: `3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`.
+Read it there; `verification/proofs/README.adoc` maps it onto this repo.
+
+| Code or obligation | Verifier |
+|---|---|
+| Rust code | **Creusot** with **Pearlite** contracts, and **Verus**, by default and on the code (§1.2). Kani for `unsafe`/FFI seams and Aeneas for Rust that implements an Agda theorem run alongside, never instead |
+| Ada code | **SPARK** |
+| APIs, ABIs, engineering properties | **Idris2** |
+| Theory | **Agda**, rechecked in **Rocq** and **Lean** (no Mathlib) |
+
+Always name Creusot, Pearlite and Verus in Rust verification plans and in
+`docs/status/PROOF-STATUS.adoc`. Pearlite is Creusot's specification
+language, not a third verifier. Plan scopes for both verifiers, and record
+any that is unsupported, inapplicable or not yet run, with its reason; never
+present an unexecuted check as a pass. Using both does not make two
+independent witnesses (policy §1.2).
+
+Third-party code (crates such as Bevy, libraries, forks) is **not** converted
+or re-proved. Where a proof relies on a dependency the prover does not check,
+state the reliance as an `ASSUMED` boundary specification. Where the
+dependency's whole import cone compiles under the prover's safe mode with zero
+postulates, it is *checked, not assumed*: record the cone (root module, flags,
+postulate count of zero, library name, version and pin) instead of an
+`ASSUMED` row (policy §1.1). A cone with a postulate, or compiled outside safe
+mode, is not checked. When choosing between dependencies that fit equally
+well, prefer one that carries its own verification. A preference, not a gate.
+
+Proof Witness Grades are policy §8. They apply to *theory* theorems only: Agda
+source, rechecked in Rocq and Lean (§8.1). Engineering proofs (Creusot, Verus,
+SPARK, Idris2) are not graded on this ladder; they use the §5 tokens only. For
+a theory theorem, `PWG-3` < `PWG-2i` < `PWG-2ii` < `PWG-1`, where `PWG-1` is
+strongest. A theorem that does not reach `PWG-3` is `ungraded`, with no
+qualifier. A grade is derived from receipts, never asserted. A "verified" or
+"machine-checked" claim needs current receipts. Report a census with its
+denominator, never a percentage. Always write the `PWG-` prefix: CRG, TRG, ARG
+and FRG letters, and ECHIDNA's `TrustLevel`, are different schemes.
+
 ---
 
-# This repo: `ordinal-notation`  ·  clade `fv-ordinal-notation`
+# This repo: `ordinal-notation`
 
-- **Identity** — uuid `#u8"gv-clade-index:github.com/hyperpolymath/ordinal-notation"`; clade `fv` (secondary ``); born 2026-10-26; forge `hyperpolymath/ordinal-notation`.
+- **Identity** — chora id `#u8"gv-clade-index:github.com/hyperpolymath/ordinal-notation"`; clade: fv (placement); born 2026-10-26; forge `hyperpolymath/ordinal-notation`.
 - **IS** — Constructive Agda development of ordinal notations (Brouwer ordinals, the Veblen hierarchy up to Γ₀, Buchholz term orders and their well-foundedness), extracted from echo-types as a frozen hand-off record.
 - **IS-NOT** — a proof that the Buchholz order has order type ψ₀(Ω_ω): that is open · part of echo-types, which keeps only its EchoOrdinal bridge · an active project: the climb is frozen by decision D-2026-06-21
 - **Where it sits** — pipeline position **UNASSIGNED**; chain `UNASSIGNED`; coordination = `standards`.
 - **Constraints here** (AGENTIC) — fail-closed; evidence-per-step; no-silent-skip; rerun-after-fix; release-claim-requires-hard-pass. Never: banned langs (above), secrets, state files in repo root, AGPL. Details: the deed's `(bot-directives (methodology) (coverage) (debt))` clauses.
 - **Golden path** (ANCHOR) — `just test && just quality` → Core tests pass; Quality gates pass; No unresolved critical security findings.
+- **Anchor override** (ANCHOR) — This repo's anchor forbids: Node.js, npm. The anchor overrides the estate policy above.
 - **State** — phase incubating; maturity experimental. Milestones and next actions: `docs/status/ROADMAP.adoc`.
 
 <!-- ARRIVAL-PACK:END · provenance: DEED@340573700442 ANCHOR@c091706e31e3 · Manifesto@DRAFT-unratified · regenerate: `just claude-md` (k9 drift-detects; do not hand-edit above) -->
@@ -141,35 +181,3 @@ hand; that migration is done per repo (ADR-008 phase P3). In deed files use
 **ENFORCEMENT:** these rulings are recorded on `standards#787`. Some are
 ruled but not yet gated: check the gate on `standards` main before
 relying on it.
-
-<!-- Hand-authored (owner ruling 2026-10-26): kept below the generated region. -->
-## Proofs — which prover for which obligation
-
-Normative source: `3-practice/PROOF-POLICY.adoc` in `hyperpolymath/standards`.
-Read it there; `verification/proofs/README.adoc` maps it onto this repo.
-
-| Code or obligation | Verifier |
-|---|---|
-| Rust code | **Creusot** with **Pearlite** contracts, and **Verus**, by default and on the code (§1.2). Kani for `unsafe`/FFI seams and Aeneas for Rust that implements an Agda theorem run alongside, never instead |
-| Ada code | **SPARK** |
-| APIs, ABIs, engineering properties | **Idris2** |
-| Theory | **Agda**, rechecked in **Rocq** and **Lean** (no Mathlib) |
-
-Always name Creusot, Pearlite and Verus in Rust verification plans and in
-`docs/status/PROOF-STATUS.adoc`. Pearlite is Creusot's specification
-language, not a third verifier. Plan scopes for both verifiers, and record
-any that is unsupported, inapplicable or not yet run, with its reason; never
-present an unexecuted check as a pass. Using both does not make two
-independent witnesses (policy §1.2).
-
-Third-party code (crates such as Bevy, libraries, forks) is **not** converted
-or re-proved. State what a proof relies on as an `ASSUMED` boundary
-specification, and when choosing between dependencies that fit equally well,
-prefer one that carries its own verification. A preference, not a gate.
-
-Proof grades are policy §8, *Proof Witness Grades*: `PWG-3` < `PWG-2i` <
-`PWG-2ii` < `PWG-1`, where `PWG-1` is strongest. A grade is derived from
-receipts, never asserted. A "verified" or "machine-checked" claim needs
-current receipts. Report a census with its denominator, never a
-percentage. Always write the `PWG-` prefix: CRG, TRG, ARG and FRG letters,
-and ECHIDNA's `TrustLevel`, are different schemes.
