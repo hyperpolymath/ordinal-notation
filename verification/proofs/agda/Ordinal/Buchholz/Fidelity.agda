@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
 -- hypatia: allow code_safety/agda_postulate -- order-type fidelity for the Buchholz notation (D-2026-06-14) is open mathematics; the TWO named postulates below (carrier-height, denotation) are the explicit, documented trust boundary. This module is OUTSIDE the --safe kernel cone by design, is NOT imported by All.agda/Smoke.agda, and asserts NOTHING that the --safe core depends on. See Fidelity-OPEN-postulates.adoc.
 
