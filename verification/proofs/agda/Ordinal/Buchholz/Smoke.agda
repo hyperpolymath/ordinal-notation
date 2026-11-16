@@ -764,3 +764,46 @@ open import Ordinal.Buchholz.BHTarget using
   ( BHNotation
   ; bh-notation-from
   )
+
+-- Brouwer/Veblen target-side headline theorems (2026-11-16). One block
+-- per module, so a rename or removal of any of these fails here first.
+-- These are TARGET-side facts about the Brouwer order; they say nothing
+-- about the order type of the Buchholz notation, which stays OPEN
+-- (D-2026-06-14; Fidelity-OPEN-postulates.adoc).
+
+-- OrdinalExp: ε₀ is an ε-number (ω^^ ε₀ ≃ ε₀, bi-≤′) and ω^^ is
+-- inflationary.
+open import Ordinal.Brouwer.OrdinalExp using
+  ( ε₀-ε-number
+  ; ω^^-infl
+  )
+
+-- VeblenPhi: every value of φ₁ is an ε-number.
+open import Ordinal.Brouwer.VeblenPhi using
+  ( φ₁-ε-number
+  )
+
+-- VeblenPhiNormal: next-ε β is the LEAST ε-number above β.
+open import Ordinal.Brouwer.VeblenPhiNormal using
+  ( next-ε-least
+  )
+
+-- VeblenBinary: every binary Veblen level φ α is continuous at limits.
+open import Ordinal.Brouwer.VeblenBinary using
+  ( φ-cont
+  )
+
+-- VeblenBinaryNormal: every level φ α is monotone and inflationary, and
+-- φ (osuc α) β is a fixed point of φ α (bi-≤′).
+open import Ordinal.Brouwer.VeblenBinaryNormal using
+  ( φ-mono₂
+  ; φ-infl
+  ; φ-level-fixed-≤
+  ; φ-level-fixed-≥
+  )
+
+-- VeblenBinaryMono: Γ₀ is a diagonal PRE-fixed point (Γ₀ ≤′ φ Γ₀ 0).
+-- That Γ₀ is the LEAST such point is not proved here.
+open import Ordinal.Brouwer.VeblenBinaryMono using
+  ( Γ₀-prefixed
+  )
