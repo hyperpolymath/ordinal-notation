@@ -57,9 +57,6 @@ jobs:
       - name: Check for large files
         run: |
           find . -type f -size +1M -not -path "./.git/*" | head -10 || echo "No large files"
-      - name: EditorConfig check
-        uses: editorconfig-checker/action-editorconfig-checker@51f63319f592f97930c73d9c46184d20bd206393 # v3.0.0
-        continue-on-error: true
   # The gates this template ships, and the proof that each one can fail.
   #
   # Nothing else in this workflow runs them: `just quality` is deliberately not
