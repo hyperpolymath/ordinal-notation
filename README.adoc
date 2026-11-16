@@ -7,7 +7,7 @@
 
 image:https://img.shields.io/badge/Code-MPL--2.0-blue.svg?logo=mozilla[Code licence: MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
 image:https://img.shields.io/badge/Docs-CC--BY--SA--4.0-blue.svg?logo=creativecommons[Docs licence: CC-BY-SA-4.0,link="https://creativecommons.org/licenses/by-sa/4.0/"]
-image:https://img.shields.io/badge/Agda-2.6.3%2B-informational[Agda 2.6.3 or later]
+image:https://img.shields.io/badge/Agda-2.7.0.1_(CI)-informational[Agda 2.7.0.1 in CI; 2.6.3 checked locally]
 image:https://img.shields.io/badge/status-frozen-lightgrey[Status: frozen]
 image:https://img.shields.io/badge/RSR-Rhodium_Standard-9C27B0[Rhodium Standard Repository,link="https://github.com/hyperpolymath/rhodium-standard-repositories"]
 
@@ -84,8 +84,12 @@ the rejected routes are explained in `docs/bridges/buchholz-plan.adoc` and
 
 == Build
 
-You need Agda 2.6.3 or later and version 2.3 of the Agda standard library,
-registered under the library name `standard-library`.
+You need Agda and version 2.3 of the Agda standard library, registered under
+the library name `standard-library`. The `agda` job in
+`.github/workflows/quality.yml` pins Agda 2.7.0.1 with standard library 2.3.
+Agda 2.6.3 with standard library 2.3 was checked locally on 2026-11-09 (see
+link:docs/status/PROOF-STATUS.adoc[docs/status/PROOF-STATUS.adoc]). No other
+version has been tested, so no minimum version is claimed.
 
 [source,sh]
 ----
@@ -102,10 +106,17 @@ just proof-check-agda
 ----
 
 `verification/proofs/agda/Ordinal/Buchholz/Smoke.agda` pins the Buchholz
-headline theorems. The Brouwer and Veblen headlines (`ε₀-ε-number`,
-`φ₁-ε-number`, `next-ε-least`, `nextFix-least`, `Γ₀-prefixed`,
-`Γ₀-fixed-from-closure`, `nextFix-mono-in-g`) are checked through
-`All.agda` but not yet pinned. There is no CI job for the proofs yet; see
+headline theorems. Of the Brouwer and Veblen headlines, four are also pinned
+there: `ε₀-ε-number`, `φ₁-ε-number`, `next-ε-least` and `Γ₀-prefixed`. Three
+are checked through `All.agda` but not pinned: `nextFix-least`,
+`Γ₀-fixed-from-closure` and `nextFix-mono-in-g`.
+
+The `agda` job in `.github/workflows/quality.yml` runs `scripts/check-proofs.sh agda`
+and then `agda --safe --without-K --cubical-compatible --double-check -W error
+-W noUnsupportedIndexedMatch All.agda`. As of 2026-11-16, however, every
+recent `Code Quality` run on `main` ended in `startup_failure` (a workflow-file
+problem), so `main` has no green run of that job. A run of a probe branch
+reported the job as passing. See
 link:docs/status/PROOF-STATUS.adoc[docs/status/PROOF-STATUS.adoc].
 
 == Relation to echo-types
