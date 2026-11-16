@@ -213,7 +213,7 @@ if command -v bun >/dev/null 2>&1; then
         # and still require the three scanner contexts to be among them.
         want="$(grep -cvE '^[[:space:]]*(#|$)' "$MAP")"
         scan3="$(grep -cE '^scan / (gitleaks|rust-secrets|shell-secrets)[[:space:]]*=>' "$MAP")"
-        if grep -q "^OK: ${want} required status context" "$WORK/rc.log" && [ "$scan3" = 3 ]; then
+        if grep -q "^OK: ${want} required status context" "$WORK/rc.log" && [[ "$scan3" == 3 ]]; then
             ok "check-required-contexts.sh certifies all ${want} mapped contexts, including the 3 scanner contexts, on the real tree"
         else
             cp "$WORK/rc.log" "$WORK/why"
