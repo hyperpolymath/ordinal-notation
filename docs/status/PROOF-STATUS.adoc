@@ -113,17 +113,19 @@ and agda-stdlib 2.3, and `scripts/check-agda-trusted-base.sh` passed.
 
 == Known gaps (2026-11-09)
 
-* No CI job runs Agda. The checks run locally.
-* `scripts/check-proofs.sh agda` uses `agda --safe`, not the PROOF-POLICY §2.1
-  invocation `agda --safe --without-K --cubical-compatible`. Every gated file
-  declares `--safe --without-K` in its own header.
+* A CI job runs Agda (`agda` in `.github/workflows/quality.yml`, Agda
+  2.7.0.1, standard library 2.3). As of 2026-11-16 every recent `Code Quality`
+  run on `main` ended in `startup_failure`, so `main` has no green run of it.
+* `scripts/check-proofs.sh agda` now uses `--safe --without-K
+  --cubical-compatible --double-check -W error -W noUnsupportedIndexedMatch`.
 * The quarantine check passes if `Fidelity.agda` fails `--safe` for any
   reason; it does not check that the file still type-checks without
   `--safe`.
-* The Brouwer and Veblen headline names are not pinned in a Smoke module.
-* Files do not yet declare the estate strict flag set (`--cubical-compatible
-  --exact-split --no-sized-types --no-guardedness`); the code is compatible
-  with it (#2).
+* `Smoke.agda` pins four of the seven Brouwer and Veblen headline names
+  (`ε₀-ε-number`, `φ₁-ε-number`, `next-ε-least`, `Γ₀-prefixed`). Not pinned:
+  `nextFix-least`, `Γ₀-fixed-from-closure`, `nextFix-mono-in-g`.
+* Every `.agda` file declares the estate strict flag set (`--safe --without-K
+  --cubical-compatible --exact-split --no-sized-types --no-guardedness`).
 
 == Verification commands
 

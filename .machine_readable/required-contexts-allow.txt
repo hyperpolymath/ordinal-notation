@@ -33,3 +33,4 @@
 scan / gitleaks => .github/workflows/secret-scanner.yml
 scan / rust-secrets => .github/workflows/secret-scanner.yml
 scan / shell-secrets => .github/workflows/secret-scanner.yml
+CI/gate => .github/workflows/proven-tests.yml

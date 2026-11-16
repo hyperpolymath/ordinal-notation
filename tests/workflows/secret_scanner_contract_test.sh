@@ -208,8 +208,13 @@ mutate "a job-level remote reusable call" \
 echo "=== 5. Wire-up: the real tree still certifies all three contexts ==="
 if command -v bun >/dev/null 2>&1; then
     if bash "$REPO_DIR/scripts/check-required-contexts.sh" "$REPO_DIR" > "$WORK/rc.log" 2>&1; then
-        if grep -q '3 required status context' "$WORK/rc.log"; then
-            ok "check-required-contexts.sh certifies 3 contexts on the real tree"
+        # The mapping may carry other required contexts (for example CI/gate),
+        # so compare against the number of mapped lines instead of a literal 3,
+        # and still require the three scanner contexts to be among them.
+        want="$(grep -cvE '^[[:space:]]*(#|$)' "$MAP")"
+        scan3="$(grep -cE '^scan / (gitleaks|rust-secrets|shell-secrets)[[:space:]]*=>' "$MAP")"
+        if grep -q "^OK: ${want} required status context" "$WORK/rc.log" && [[ "$scan3" == 3 ]]; then
+            ok "check-required-contexts.sh certifies all ${want} mapped contexts, including the 3 scanner contexts, on the real tree"
         else
             cp "$WORK/rc.log" "$WORK/why"
             bad "check-required-contexts.sh passed but certified a different count"
