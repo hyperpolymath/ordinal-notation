@@ -99,7 +99,7 @@ check_one() {
             fi ;;
     lean4)  out="$(cd "$ROOT/$root" && lean          "$rel" 2>&1)"; rc=$? ;;
     # Canonical theory invocation, PROOF-POLICY §2.1 (standards). Do not weaken.
-    agda)   out="$(cd "$ROOT/$root" && agda --safe --without-K --cubical-compatible "$rel" 2>&1)"; rc=$? ;;
+    agda)   out="$(cd "$ROOT/$root" && agda --safe --without-K --cubical-compatible --double-check -W error -W noUnsupportedIndexedMatch "$rel" 2>&1)"; rc=$? ;;
     coq)    out="$(cd "$ROOT/$root" && coqc           "$rel" 2>&1)"; rc=$? ;;
   esac
   set -e

@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
 -- Deliberately-narrowed `_<ᵇ⁻_` umbrella covering the
 -- strict-head-closed slice (Slice 4, 2026-05-28).
