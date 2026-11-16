@@ -115,7 +115,7 @@ jobs:
   # detector job that itself succeeded). Pattern: hyperpolymath/hypatia ci.yml.
   # ==========================================================================
   ci-gate:
-    name: CI/gate
+    name: "CI/gate"
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions: {}
