@@ -15,11 +15,24 @@ nothing here is an active climb.
 
 == Grade census
 
-76 gated modules, 1 quarantined. Every theorem is `ungraded`: no PWG-3
-receipt (Agda version, standard-library pin, flags in force under
-`agda --safe --without-K --cubical-compatible`, import cone, commit) is
-recorded, and no Rocq or Lean leg exists. PWG-3 0, PWG-2i 0, PWG-2ii 0,
-PWG-1 0, `ungraded`: all.
+76 gated modules, 1 quarantined. Census of the 17 claim rows below: 13
+`PWG-3`, 0 `PWG-2i`, 0 `PWG-2ii`, 0 `PWG-1`, 4 `ungraded` (ON-7, ON-12,
+ON-13 and ON-17, all `open`). No Rocq or Lean leg exists.
+
+The receipt is
+link:../../verification/receipts/ordinal-notation-proofs_praxis.deed[`verification/receipts/ordinal-notation-proofs_praxis.deed`]
+(PROOF-POLICY §8.5.1). It describes source commit `de05422` and the `agda`
+job of Agda Proofs run
+https://github.com/hyperpolymath/ordinal-notation/actions/runs/43981542366/job/133698990528[43981542366]
+on that commit: Agda 2.7.0.1 and agda-stdlib v2.3 (`8326c74`), `All.agda`
+checked with `agda --safe --without-K --cubical-compatible --double-check -W
+error -W noUnsupportedIndexedMatch`. The import cone is 209 modules: 76 of
+this repository, 126 of agda-stdlib and 7 supplied with Agda. A comment-aware
+postulate scan of the cone finds only the four `Agda.Primitive` level
+postulates, which the receipt lists as its trusted base; `Fidelity.agda` is
+outside the cone. standards `deed_lint.js --proof-receipt-json` and
+`scripts/check-proof-receipt.sh` both pass on the receipt. A later commit that
+changes a file in its manifests is not described by it.
 
 Local check, not a receipt: on 2026-11-09 `All.agda` at `53ff625` compiled
 cold under `agda --safe --without-K --cubical-compatible` with Agda 2.6.3
@@ -27,77 +40,111 @@ and agda-stdlib 2.3, and `scripts/check-agda-trusted-base.sh` passed.
 
 == Claims
 
-[cols="3,3,1",options="header"]
+[cols="1,3,3,3,1",options="header"]
 |===
-| Claim | Carried by | Status
+| ID | Claim | Carried by | Status | Grade
 
+| ON-1
 | Brouwer ordinals carry a well-founded strict order
 | `wf-<′`, `Brouwer/Phase13.agda`
 | `proven`
+| `PWG-3`
 
+| ON-2
 | `ω^^` (ordinal exponent, limit exponents included); `ε₀` is an ε-number (both `≤′` directions); `ω^^` is inflationary
 | `ε₀-ε-number`, `ω^^-infl`, `Brouwer/OrdinalExp.agda`
 | `proven`
+| `PWG-3`
 
+| ON-3
 | Every φ₁ value is an ε-number; `next-ε β` is the least ε-number above β; φ₁ strictly monotone
 | `φ₁-ε-number`, `next-ε-least`, `φ₁-strict-mono`, `Brouwer/VeblenPhi*.agda`
 | `proven`
+| `PWG-3`
 
+| ON-4
 | Binary φ: every level is monotone, inflationary and continuous; Veblen recurrence
 | `φ-mono₂`, `φ-infl`, `φ-cont`, `φ-level-fixed-≤`, `Brouwer/VeblenBinary*.agda`
 | `proven`. Strict monotonicity of the binary levels is *not* proved, so "normal function" holds only in the weak sense.
+| `PWG-3`
 
+| ON-5
 | Fixed-point engine: least fixed point; monotone in its function
 | `nextFix-least`, `nextFix-mono-in-g`, `deriv-mono-in-g`
 | `proven`
+| `PWG-3`
 
+| ON-6
 | `Γ₀ ≤′ φ_Γ₀(0)`
 | `Γ₀-prefixed`, `Brouwer/VeblenBinaryMono.agda`
 | `proven`. This is the direction that holds for every α; the Γ₀-specific content is the converse, below.
+| `PWG-3`
 
+| ON-7
 | `φ_Γ₀(0) ≤′ Γ₀` (Γ₀ is the least diagonal fixed point)
 | reduced to a closure obligation by `Γ₀-fixed-from-closure`
 | `open`
+| `ungraded`
 
+| ON-8
 | `_<ᵇ_` (admitted core) is well-founded
 | `wf-<ᵇ`, `Buchholz/WellFounded.agda` (structural, no rank)
 | `proven`
+| `PWG-3`
 
+| ON-9
 | `_<ᵇ²_` is ordinally sound and well-founded
 | `rank2-mono-<ᵇ²`, `wf-<ᵇ²`, `Buchholz/RankDoubledLadderUmbrella.agda`
 | `proven`. Scope: `_<ᵇ²_` has no same-index ψ comparison and needs `WfAdm` on ψ sources, which `BH` fails, so it omits the ψ₀ fragment.
+| `PWG-3`
 
+| ON-10
 | Recursive surface order on the sound carrier is well-founded, unbudgeted
 | `wf-<ᵇʳᶠ²`, `Buchholz/RecursiveSurfaceSound.agda`
 | `proven`
+| `PWG-3`
 
+| ON-11
 | Budgeted recursive surface order is well-founded
 | `wf-<ᵇʳᶠᵇ`, `Buchholz/RecursiveSurfaceBudget.agda`
 | `proven`
+| `PWG-3`
 
+| ON-12
 | Unbudgeted global WF of the recursive surface order over native `_<ᵇ_`
 | routes recorded as walled in `docs/bridges/buchholz-rank-obstruction.adoc`
 | `open`
+| `ungraded`
 
+| ON-13
 | `OrderExtended._<ᵇ⁺_` is well-founded
 | not mechanised
 | `open`. 2026-11-09 observation (not checked): it looks like a subrelation of `ExtendedOrder._<ᵇ⁺_`, whose `wf-<ᵇ⁺` is proved. The two modules use the same name for different relations.
+| `ungraded`
 
+| ON-14
 | Target notation from the Brouwer order
 | `bh-notation-from`, `Buchholz/BHTarget.agda` (fixes the order only)
 | `proven`
+| `PWG-3`
 
+| ON-15
 | CNF trichotomy; staged closure monotone; pedagogical ψ least
 | `cnf-trichotomy`, `C-monotone`, `psi-least`
 | `proven`
+| `PWG-3`
 
+| ON-16
 | Checked refutations of two tempting lemmas
 | `Brouwer/StrictLeftMonoRefuted.agda`, `Brouwer/AdditivePrincipalGenericRefuted.agda`
 | `proven` (as refutations)
+| `PWG-3`
 
+| ON-17
 | Order type of the Buchholz order is ψ₀(Ω_ω)
 | `Buchholz/Fidelity.agda` (quarantined, two postulates)
 | `open`. The 2026-11-09 audit found the earlier specification jointly inconsistent; it was restated the same day as the order type of the sound carrier (`WfAdm` under `_<ᵇ²_`), which omits the ψ₀ fragment, so even when discharged it is not yet the ψ₀(Ω_ω) claim. See `verification/proofs/agda/Fidelity-OPEN-postulates.adoc`.
+| `ungraded`
 |===
 
 == Trusted base
@@ -113,9 +160,10 @@ and agda-stdlib 2.3, and `scripts/check-agda-trusted-base.sh` passed.
 
 == Known gaps (2026-11-09)
 
-* A CI job runs Agda (`agda` in `.github/workflows/quality.yml`, Agda
-  2.7.0.1, standard library 2.3). As of 2026-11-16 every recent `Code Quality`
-  run on `main` ended in `startup_failure`, so `main` has no green run of it.
+* The CI `agda` job (Agda 2.7.0.1, standard library 2.3) runs in
+  `.github/workflows/agda-proofs.yml`; #18 moved it out of `quality.yml`, whose
+  runs end in `startup_failure`. It passed on `main` at `de05422`, the run the
+  receipt cites.
 * `scripts/check-proofs.sh agda` now uses `--safe --without-K
   --cubical-compatible --double-check -W error -W noUnsupportedIndexedMatch`.
 * The quarantine check passes if `Fidelity.agda` fails `--safe` for any
